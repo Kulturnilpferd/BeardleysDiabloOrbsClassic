@@ -93,10 +93,15 @@ local function updateManaOrb()
 end
 
 local function reconfigUI()
+	--SetCVar("showHonorAsExperience",0)
+	SetCVar("uiScale", .8)
+	SetCVar("useUiScale",1)
+	
 	MainMenuBarArtFrame.PageNumber:Hide()
 	MainMenuBarArtFrame.LeftEndCap:Hide()
 	MainMenuBarArtFrame.RightEndCap:Hide()
 	MainMenuBarArtFrameBackground:Hide()
+	MicroButtonAndBagsBar.MicroBagBar:Hide()
 
 	BDOMod_HealthOrb:SetScale(scaleFactor*70/100)
 	BDOMod_ManaOrb:SetScale(scaleFactor*70/100)
@@ -358,18 +363,6 @@ local function reconfigUI()
 	PetActionBarFrame:Show()
 	--PetActionBarFrame.ignoreFramePositionManager = true
 
-	--EXP Bar
-	--MainMenuExpBar:ClearAllPoints()
-	--MainMenuExpBar:SetScale(scaleFactor*34.4)
-	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",0,232)
-	--MainMenuExpBar.ignoreFramePositionManager = true
-
-	--REP Bar (Positioning doesnt work...)
-	--ReputationWatchBar:ClearAllPoints()
-	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",0,230)
-	--ReputationWatchBar:SetScale(scaleFactor*34.6)
-	--ReputationWatchBar.ignoreFramePositionManager = true
-
 	--Micro Buttons	
 	CharacterMicroButton:ClearAllPoints()
 	SpellbookMicroButton:ClearAllPoints()
@@ -449,10 +442,10 @@ local function reconfigUI()
 	StanceButton6:SetScale(scaleFactor*48/100)
 	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
 
-	--MainMenuExpBar:ClearAllPoints()
-	--MainMenuExpBar:SetScale(scaleFactor*31/100)
-	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--249
-
+	StatusTrackingBarManager:ClearAllPoints()
+	StatusTrackingBarManager:SetScale(scaleFactor*31/100)
+	StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
+	StatusTrackingBarManager.ignoreFramePositionManager = true
 	--ReputationWatchBar:ClearAllPoints()
 	--ReputationWatchBar:SetScale(scaleFactor*31/100)
 	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235

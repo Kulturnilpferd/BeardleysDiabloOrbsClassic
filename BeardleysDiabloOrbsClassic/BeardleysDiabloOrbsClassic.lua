@@ -1,4 +1,4 @@
-﻿----------------------------
+----------------------------
 ----------------------------
 -- Beardley's Diablo Orbs --
 -- (c)2019 Kulturnilpferd -- 
@@ -425,36 +425,36 @@ local function reconfigUI()
 	CharacterBag2Slot.ignoreFramePositionManager = true
 	CharacterBag3Slot.ignoreFramePositionManager = true
 
-	--ShapeshiftButton1:ClearAllPoints()
-	--ShapeshiftButton1:SetScale(scaleFactor*48)
-	--ShapeshiftButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
+	StanceButton1:ClearAllPoints()
+	StanceButton1:SetScale(scaleFactor*48/100)
+	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
 
-	--ShapeshiftButton2:ClearAllPoints()
-	--ShapeshiftButton2:SetScale(scaleFactor*48)
-	--ShapeshiftButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
+	StanceButton2:ClearAllPoints()
+	StanceButton2:SetScale(scaleFactor*48/100)
+	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
 
-	--ShapeshiftButton3:ClearAllPoints()
-	--ShapeshiftButton3:SetScale(scaleFactor*48)
-	--ShapeshiftButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-254,1)
+	StanceButton3:ClearAllPoints()
+	StanceButton3:SetScale(scaleFactor*48/100)
+	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-254,1)
 
-	--ShapeshiftButton4:ClearAllPoints()
-	--ShapeshiftButton4:SetScale(scaleFactor*48)
-	--ShapeshiftButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-222,1)
+	StanceButton4:ClearAllPoints()
+	StanceButton4:SetScale(scaleFactor*48/100)
+	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-222,1)
 
-	--ShapeshiftButton5:ClearAllPoints()
-	--ShapeshiftButton5:SetScale(scaleFactor*48)
-	--ShapeshiftButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-190,1)
+	StanceButton5:ClearAllPoints()
+	StanceButton5:SetScale(scaleFactor*48/100)
+	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-190,1)
 
-	--ShapeshiftButton6:ClearAllPoints()
-	--ShapeshiftButton6:SetScale(scaleFactor*48)
-	--ShapeshiftButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
+	StanceButton6:ClearAllPoints()
+	StanceButton6:SetScale(scaleFactor*48/100)
+	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
 
 	--MainMenuExpBar:ClearAllPoints()
-	--MainMenuExpBar:SetScale(scaleFactor*31)
+	--MainMenuExpBar:SetScale(scaleFactor*31/100)
 	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--249
 
 	--ReputationWatchBar:ClearAllPoints()
-	--ReputationWatchBar:SetScale(scaleFactor*31)
+	--ReputationWatchBar:SetScale(scaleFactor*31/100)
 	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235
 
 	ActionBarUpButton:ClearAllPoints()

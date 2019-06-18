@@ -94,7 +94,7 @@ end
 
 local function reconfigUI()
 	--SetCVar("showHonorAsExperience",0)
-	SetCVar("uiScale", .8)
+	SetCVar("uiScale", .9)
 	SetCVar("useUiScale",1)
 	
 	MainMenuBarArtFrame.PageNumber:Hide()
@@ -363,89 +363,114 @@ local function reconfigUI()
 	PetActionBarFrame:Show()
 	--PetActionBarFrame.ignoreFramePositionManager = true
 
-	--Micro Buttons	
+	
 	CharacterMicroButton:ClearAllPoints()
 	SpellbookMicroButton:ClearAllPoints()
 	TalentMicroButton:ClearAllPoints()
+	AchievementMicroButton:ClearAllPoints()
 	QuestLogMicroButton:ClearAllPoints()
-	--SocialsMicroButton:ClearAllPoints()
-	--WorldMapMicroButton:ClearAllPoints()
-	MainMenuMicroButton:ClearAllPoints()
-	HelpMicroButton:ClearAllPoints()
+	GuildMicroButton:ClearAllPoints()
+	LFDMicroButton:ClearAllPoints()
+	CollectionsMicroButton:ClearAllPoints()
+	EJMicroButton:ClearAllPoints()
+	StoreMicroButton:ClearAllPoints()
+	MainMenuMicroButton:ClearAllPoints()	
 	MainMenuBarBackpackButton:ClearAllPoints()
 	CharacterBag0Slot:ClearAllPoints()
 	CharacterBag1Slot:ClearAllPoints()
 	CharacterBag2Slot:ClearAllPoints()
 	CharacterBag3Slot:ClearAllPoints()
+	
 
-	CharacterMicroButton:SetScale(scaleFactor*42/100)
-	SpellbookMicroButton:SetScale(scaleFactor*42/100)
-	TalentMicroButton:SetScale(scaleFactor*42/100)
-	QuestLogMicroButton:SetScale(scaleFactor*42/100)
-	--SocialsMicroButton:SetScale(scaleFactor*42/100)
-	--WorldMapMicroButton:SetScale(scaleFactor*42/100)
-	MainMenuMicroButton:SetScale(scaleFactor*42/100)
-	HelpMicroButton:SetScale(scaleFactor*42/100)
-	MainMenuBarBackpackButton:SetScale(scaleFactor*38/100)
-	CharacterBag0Slot:SetScale(scaleFactor*38/100)
-	CharacterBag1Slot:SetScale(scaleFactor*38/100)
-	CharacterBag2Slot:SetScale(scaleFactor*38/100)
-	CharacterBag3Slot:SetScale(scaleFactor*38/100)
+	--Micro Buttons	
+	CharacterMicroButton:SetScale(scaleFactor*40/100)
+	SpellbookMicroButton:SetScale(scaleFactor*40/100)
+	TalentMicroButton:SetScale(scaleFactor*40/100)
+	AchievementMicroButton:SetScale(scaleFactor*40/100)
+	QuestLogMicroButton:SetScale(scaleFactor*40/100)
+	GuildMicroButton:SetScale(scaleFactor*40/100)
+	LFDMicroButton:SetScale(scaleFactor*40/100)
+	CollectionsMicroButton:SetScale(scaleFactor*40/100)
+	EJMicroButton:SetScale(scaleFactor*40/100)
+	StoreMicroButton:SetScale(scaleFactor*40/100)
+	MainMenuMicroButton:SetScale(scaleFactor*40/100)	
 
 	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-125,0)
 	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-100,0)
 	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-75,0)
-	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-50,0)
-	--SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-25,0)
-	--WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",0,0)
-	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",25,0)
-	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",50,0)
-
-	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",400,1)
-	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",360,1)
-	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",320,1)
-	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",280,1)
-	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",240,1)
-
+	AchievementMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-50,0)
+	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-25,0)
+	GuildMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",0,0)
+	LFDMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",25,0)
+	CollectionsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",50,0)
+	EJMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",75,0)
+	StoreMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",100,0) 
+	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",125,0)
+	
 	CharacterMicroButton.ignoreFramePositionManager = true
 	SpellbookMicroButton.ignoreFramePositionManager = true
 	TalentMicroButton.ignoreFramePositionManager = true
+	AchievementMicroButton.ignoreFramePositionManager = true
 	QuestLogMicroButton.ignoreFramePositionManager = true
+	GuildMicroButton.ignoreFramePositionManager = true
+	LFDMicroButton.ignoreFramePositionManager = true
+	CollectionsMicroButton.ignoreFramePositionManager = true
+	EJMicroButton.ignoreFramePositionManager = true
+	StoreMicroButton.ignoreFramePositionManager = true
 	MainMenuMicroButton.ignoreFramePositionManager = true
+	
+	
+	--Bag slots
+	MainMenuBarBackpackButton:SetScale(scaleFactor*32/100)
+	CharacterBag0Slot:SetScale(scaleFactor*40/100)
+	CharacterBag1Slot:SetScale(scaleFactor*40/100)
+	CharacterBag2Slot:SetScale(scaleFactor*40/100)
+	CharacterBag3Slot:SetScale(scaleFactor*40/100)
+
+	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",475,1)
+	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",348,1)
+	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",317,1)
+	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",286,1)
+	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",255,1)
+	
 	MainMenuBarBackpackButton.ignoreFramePositionManager = true
 	CharacterBag0Slot.ignoreFramePositionManager = true
 	CharacterBag1Slot.ignoreFramePositionManager = true
 	CharacterBag2Slot.ignoreFramePositionManager = true
 	CharacterBag3Slot.ignoreFramePositionManager = true
 
+	
+	--Stancebar
 	StanceButton1:ClearAllPoints()
-	StanceButton1:SetScale(scaleFactor*48/100)
-	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
+	StanceButton1:SetScale(scaleFactor*42/100)
+	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-365,1)
 
 	StanceButton2:ClearAllPoints()
-	StanceButton2:SetScale(scaleFactor*48/100)
-	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
+	StanceButton2:SetScale(scaleFactor*42/100)
+	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-335,1) --62
 
 	StanceButton3:ClearAllPoints()
-	StanceButton3:SetScale(scaleFactor*48/100)
-	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-254,1)
+	StanceButton3:SetScale(scaleFactor*42/100)
+	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-305,1)
 
 	StanceButton4:ClearAllPoints()
-	StanceButton4:SetScale(scaleFactor*48/100)
-	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-222,1)
+	StanceButton4:SetScale(scaleFactor*42/100)
+	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-275,1)
 
 	StanceButton5:ClearAllPoints()
-	StanceButton5:SetScale(scaleFactor*48/100)
-	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-190,1)
+	StanceButton5:SetScale(scaleFactor*42/100)
+	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-245,1)
 
 	StanceButton6:ClearAllPoints()
-	StanceButton6:SetScale(scaleFactor*48/100)
-	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
+	StanceButton6:SetScale(scaleFactor*42/100)
+	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-215,1)		
 
-	StatusTrackingBarManager:ClearAllPoints()
-	StatusTrackingBarManager:SetScale(scaleFactor*31/100)
-	StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
-	StatusTrackingBarManager.ignoreFramePositionManager = true
+	
+	StatusTrackingBarManager:Hide() -- Need to move that fucking bar
+	--StatusTrackingBarManager:ClearAllPoints()
+	--StatusTrackingBarManager:SetScale(scaleFactor*31/100)
+	--StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
+	
 	--ReputationWatchBar:ClearAllPoints()
 	--ReputationWatchBar:SetScale(scaleFactor*31/100)
 	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235

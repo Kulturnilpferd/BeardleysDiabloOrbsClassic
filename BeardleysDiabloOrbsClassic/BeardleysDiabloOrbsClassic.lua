@@ -14,18 +14,9 @@ local images = "Interface\\AddOns\\BeardleysDiabloOrbsClassic\\art\\"
 function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("UNIT_HEALTH")
 	BDOMod_HealthOrb:RegisterEvent("UNIT_MAXHEALTH")
-	--BDOMod_HealthOrb:RegisterEvent("UNIT_RAGE")
-	--BDOMod_HealthOrb:RegisterEvent("UNIT_ENERGY")
-	BDOMod_HealthOrb:RegisterEvent("UNIT_MANA")
-	--BDOMod_HealthOrb:RegisterEvent("UNIT_RUNIC_POWER")
-	--BDOMod_HealthOrb:RegisterEvent("UNIT_DISPLAYPOWER")
+	BDOMod_HealthOrb:RegisterEvent("UNIT_POWER_UPDATE")
+	BDOMod_HealthOrb:RegisterEvent("UNIT_DISPLAYPOWER")
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
-	BDOMod_HealthOrb:RegisterEvent("PLAYER_REGEN_DISABLED")
-	BDOMod_HealthOrb:RegisterEvent("PLAYER_REGEN_ENABLED")
-	BDOMod_HealthOrb:RegisterEvent("UPDATE_BONUS_ACTIONBAR")
-	BDOMod_HealthOrb:RegisterEvent("ACTIONBAR_SLOT_CHANGED")
-	BDOMod_HealthOrb:RegisterEvent("ACTIONBAR_SHOWGRID")
-	BDOMod_HealthOrb:RegisterEvent("LOOT_CLOSED") -- fix for vanilla, test if needed in Classic retail
 end
 
 local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,offsetY,height,width)
@@ -111,6 +102,7 @@ local function reconfigUI()
 	leftArtwork:SetScale(scaleFactor)
 	rightArtwork:SetScale(scaleFactor)	
 
+
 	--Setup Action Bar
 	ActionButton1:ClearAllPoints()
 	ActionButton2:ClearAllPoints()
@@ -164,57 +156,52 @@ local function reconfigUI()
 	ActionButton11.ignoreFramePositionManager = true
 	ActionButton12.ignoreFramePositionManager = true
 
-	--BonusActionButton1:ClearAllPoints()
-	--BonusActionButton2:ClearAllPoints()
-	--BonusActionButton3:ClearAllPoints()
-	--BonusActionButton4:ClearAllPoints()
-	--BonusActionButton5:ClearAllPoints()
-	--BonusActionButton6:ClearAllPoints()
-	--BonusActionButton7:ClearAllPoints()
-	--BonusActionButton8:ClearAllPoints()
-	--BonusActionButton9:ClearAllPoints()
-	--BonusActionButton10:ClearAllPoints()
-	--BonusActionButton11:ClearAllPoints()
-	--BonusActionButton12:ClearAllPoints()
+	
+	--Pet actionbuttons
+	PetActionButton1:ClearAllPoints()
+	PetActionButton2:ClearAllPoints()
+	PetActionButton3:ClearAllPoints()
+	PetActionButton4:ClearAllPoints()
+	PetActionButton5:ClearAllPoints()
+	PetActionButton6:ClearAllPoints()
+	PetActionButton7:ClearAllPoints()
+	PetActionButton8:ClearAllPoints()
+	PetActionButton9:ClearAllPoints()
+	PetActionButton10:ClearAllPoints()
 
-	--BonusActionButton1:SetScale(scaleFactor*60)
-	--BonusActionButton2:SetScale(scaleFactor*60)
-	--BonusActionButton3:SetScale(scaleFactor*60)
-	--BonusActionButton4:SetScale(scaleFactor*60)
-	--BonusActionButton5:SetScale(scaleFactor*60)
-	--BonusActionButton6:SetScale(scaleFactor*60)
-	--BonusActionButton7:SetScale(scaleFactor*60)
-	--BonusActionButton8:SetScale(scaleFactor*60)
-	--BonusActionButton9:SetScale(scaleFactor*60)
-	--BonusActionButton10:SetScale(scaleFactor*60)
-	--BonusActionButton11:SetScale(scaleFactor*60)
-	--BonusActionButton12:SetScale(scaleFactor*60)	
+	PetActionButton1:SetScale(scaleFactor*60)
+	PetActionButton2:SetScale(scaleFactor*60)
+	PetActionButton3:SetScale(scaleFactor*60)
+	PetActionButton4:SetScale(scaleFactor*60)
+	PetActionButton5:SetScale(scaleFactor*60)
+	PetActionButton6:SetScale(scaleFactor*60)
+	PetActionButton7:SetScale(scaleFactor*60)
+	PetActionButton8:SetScale(scaleFactor*60)
+	PetActionButton9:SetScale(scaleFactor*60)
+	PetActionButton10:SetScale(scaleFactor*60)
 
-	--BonusActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
-	--BonusActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
-	--BonusActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
-	--BonusActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
-	--BonusActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
-	--BonusActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
-	--BonusActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
-	--BonusActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
-	--BonusActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
-	--BonusActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
-	--BonusActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,29)
-	--BonusActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,29)	
+	PetActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
+	PetActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
+	PetActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
+	PetActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
+	PetActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
+	PetActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
+	PetActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
+	PetActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
+	PetActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
+	PetActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
 
-	--BonusActionButton1.ignoreFramePositionManager = true
-	--BonusActionButton2.ignoreFramePositionManager = true
-	--BonusActionButton3.ignoreFramePositionManager = true
-	--BonusActionButton4.ignoreFramePositionManager = true
-	--BonusActionButton5.ignoreFramePositionManager = true
-	--BonusActionButton6.ignoreFramePositionManager = true
-	--BonusActionButton7.ignoreFramePositionManager = true
-	--BonusActionButton8.ignoreFramePositionManager = true
-	--BonusActionButton9.ignoreFramePositionManager = true
-	--BonusActionButton10.ignoreFramePositionManager = true
-	--BonusActionButton11.ignoreFramePositionManager = true
-	--BonusActionButton12.ignoreFramePositionManager = true
+	--PetActionButton1.ignoreFramePositionManager = true
+	--PetActionButton2.ignoreFramePositionManager = true
+	--PetActionButton3.ignoreFramePositionManager = true
+	--PetActionButton4.ignoreFramePositionManager = true
+	--PetActionButton5.ignoreFramePositionManager = true
+	--PetActionButton6.ignoreFramePositionManager = true
+	--PetActionButton7.ignoreFramePositionManager = true
+	--PetActionButton8.ignoreFramePositionManager = true
+	--PetActionButton9.ignoreFramePositionManager = true
+	--PetActionButton10.ignoreFramePositionManager = true
+
 
 	--Setup Left Multibar
 	MultiBarBottomLeftButton1:ClearAllPoints()
@@ -549,12 +536,8 @@ function BDOMod_OnEvent(event)
 		updateHealthOrb()
 		return
 	end
-	if (event=="UNIT_MANA" or event=="UNIT_RAGE" or event=="UNIT_ENERGY" or event=="UNIT_RUNIC_POWER") then    
+	if (event=="UNIT_POWER_UPDATE") then    
 		updateManaOrb()
-		return
-	end
-	if (event=="UPDATE_BONUS_ACTIONBAR" or event=="ACTIONBAR_SLOT_CHANGED" or event=="ACTIONBAR_SHOWGRID" or event=="LOOT_CLOSED") then
-		changeActionBar()
 		return
 	end
 end

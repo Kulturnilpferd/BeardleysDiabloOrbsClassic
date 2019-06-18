@@ -37,36 +37,6 @@ local function createArtwork()
 	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","HIGH",325,0,200,200)
 end
 
-local function changeActionBar()
-	if GetBonusBarOffset() == 0 then
-		ActionButton1:Show()
-		ActionButton2:Show()
-		ActionButton3:Show()
-		ActionButton4:Show()
-		ActionButton5:Show()
-		ActionButton6:Show()
-		ActionButton7:Show()
-		ActionButton8:Show()
-		ActionButton9:Show()
-		ActionButton10:Show()
-		ActionButton11:Show()
-		ActionButton12:Show()
-	else
-		ActionButton1:Hide()
-		ActionButton2:Hide()
-		ActionButton3:Hide()
-		ActionButton4:Hide()
-		ActionButton5:Hide()
-		ActionButton6:Hide()
-		ActionButton7:Hide()
-		ActionButton8:Hide()
-		ActionButton9:Hide()
-		ActionButton10:Hide()
-		ActionButton11:Hide()
-		ActionButton12:Hide()
-	end
-end
-
 local function updateHealthOrb()
 	local healthPercent = (UnitHealth("player")/UnitHealthMax("player"))
 	BDOMod_HealthPercentage:SetText(floor(healthPercent * 100))

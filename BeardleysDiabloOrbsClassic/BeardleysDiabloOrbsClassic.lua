@@ -19,10 +19,11 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,offsetY,height,width)
+local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
 	local artworkFrame = CreateFrame("Frame",frameName,parentFrame)
 	artworkFrame:SetPoint("BOTTOM",offsetX,offsetY)
 	artworkFrame:SetFrameStrata(FrameStrata)
+	artworkFrame:SetFrameLevel(FrameLevel)
 	artworkFrame:SetHeight(height)
 	artworkFrame:SetWidth(width)
 	artworkFrame.texture = artworkFrame:CreateTexture(nil,"OVERLAY")
@@ -32,9 +33,9 @@ local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,of
 end
 
 local function createArtwork()
-	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",1,-4,127,491)
-	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","HIGH",-325,0,200,200)
-	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","HIGH",325,0,200,200)
+	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
+	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
+	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
 end
 
 local function updateHealthOrb()
@@ -51,6 +52,11 @@ local function updateManaOrb()
 	BDOMod_ManaText:SetText(UnitPower("player").." / ".. UnitPowerMax("player"))
 	BDOMod_BlueOrb:SetHeight(manaPercent * 185)
 	BDOMod_BlueOrb:SetTexCoord(0, 1, 1-manaPercent, 1)
+end
+
+local function setFrameStratLevel(frame, strata, level)
+	frame:SetFrameStrata(strata)
+	frame:SetFrameLevel(level)
 end
 
 local function reconfigUI()
@@ -100,18 +106,18 @@ local function reconfigUI()
 	ActionButton11:SetScale(scaleFactor*60/100)
 	ActionButton12:SetScale(scaleFactor*60/100)
 
-	ActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
-	ActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
-	ActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
-	ActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
-	ActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
-	ActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
-	ActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
-	ActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
-	ActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
-	ActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
-	ActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,29)
-	ActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,29)
+	ActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,28)
+	ActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,28)
+	ActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,28)
+	ActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,28)
+	ActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,28)
+	ActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,28)
+	ActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,28)
+	ActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,28)
+	ActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,28)
+	ActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,28)
+	ActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,28)
+	ActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,28)
 
 	ActionButton1.ignoreFramePositionManager = true
 	ActionButton2.ignoreFramePositionManager = true
@@ -293,31 +299,32 @@ local function reconfigUI()
 	CastingBarFrame:SetPoint("CENTER", 0, 500)	
 
 	--Setup Chatframes
-	ChatFrame1:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame2:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame3:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame4:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame5:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame6:SetFrameStrata("HIGH")	
-	ChatFrame1:SetFrameLevel(9)
-
-	ChatFrame7:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
-
+	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame1EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame2, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame2EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame3, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame3EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame4, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame4EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame5, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame5EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame6, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame6EditBox, "MEDIUM", 1)
+	
+	setFrameStratLevel(ChatFrame7, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame7EditBox, "MEDIUM", 1)
+	
+	
 	PetActionBarFrame:ClearAllPoints()
 	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
 	PetActionBarFrame:SetScale(scaleFactor*60/100)
-	PetActionBarFrame:Show()
+	--PetActionBarFrame:Show()
 	--PetActionBarFrame.ignoreFramePositionManager = true
 
 	
@@ -379,16 +386,16 @@ local function reconfigUI()
 	
 	--Bag slots
 	MainMenuBarBackpackButton:SetScale(scaleFactor*32/100)
-	CharacterBag0Slot:SetScale(scaleFactor*40/100)
-	CharacterBag1Slot:SetScale(scaleFactor*40/100)
-	CharacterBag2Slot:SetScale(scaleFactor*40/100)
-	CharacterBag3Slot:SetScale(scaleFactor*40/100)
+	CharacterBag0Slot:SetScale(scaleFactor*42/100)
+	CharacterBag1Slot:SetScale(scaleFactor*42/100)
+	CharacterBag2Slot:SetScale(scaleFactor*42/100)
+	CharacterBag3Slot:SetScale(scaleFactor*42/100)
 
 	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",475,1)
-	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",348,1)
-	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",317,1)
-	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",286,1)
-	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",255,1)
+	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",331,1)
+	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",301,1)
+	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",271,1)
+	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",241,1)
 	
 	MainMenuBarBackpackButton.ignoreFramePositionManager = true
 	CharacterBag0Slot.ignoreFramePositionManager = true
@@ -433,12 +440,12 @@ local function reconfigUI()
 	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235
 
 	ActionBarUpButton:ClearAllPoints()
-	ActionBarUpButton:SetScale(scaleFactor*66/100)
-	ActionBarUpButton:SetPoint("BOTTOM", UIParent, "BOTTOM",500,16)
-
+	ActionBarUpButton:SetScale(scaleFactor*42/100)
+	ActionBarUpButton:SetPoint("BOTTOM", UIParent, "BOTTOM",392,54)
+	
 	ActionBarDownButton:ClearAllPoints()
-	ActionBarDownButton:SetScale(scaleFactor*66/100)
-	ActionBarDownButton:SetPoint("BOTTOM", UIParent, "BOTTOM",500,-2)
+	ActionBarDownButton:SetScale(scaleFactor*42/100)
+	ActionBarDownButton:SetPoint("BOTTOM", UIParent, "BOTTOM",392,38)
 end
 
 local function setupOrbs()

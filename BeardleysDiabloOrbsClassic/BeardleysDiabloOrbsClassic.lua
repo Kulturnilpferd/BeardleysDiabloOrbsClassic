@@ -479,6 +479,12 @@ local function updatePowerType()
 		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
 		return
 	end
+	if (powerType == 2) then -- Focus
+		BDOMod_BlueOrb:SetVertexColor(1.0,0.4,0.03)
+		--BDOMod_BlueOrb:SetAlpha(0.95)
+		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
+		return
+	end
 	if (powerType == 3) then -- Energy
 		BDOMod_BlueOrb:SetVertexColor(1.0,1.0,0.0)
 		--BDOMod_BlueOrb:SetAlpha(0.95)

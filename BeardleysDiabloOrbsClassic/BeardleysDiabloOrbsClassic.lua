@@ -145,38 +145,38 @@ local function reconfigUI()
 	PetActionButton9:ClearAllPoints()
 	PetActionButton10:ClearAllPoints()
 
-	PetActionButton1:SetScale(scaleFactor*60)
-	PetActionButton2:SetScale(scaleFactor*60)
-	PetActionButton3:SetScale(scaleFactor*60)
-	PetActionButton4:SetScale(scaleFactor*60)
-	PetActionButton5:SetScale(scaleFactor*60)
-	PetActionButton6:SetScale(scaleFactor*60)
-	PetActionButton7:SetScale(scaleFactor*60)
-	PetActionButton8:SetScale(scaleFactor*60)
-	PetActionButton9:SetScale(scaleFactor*60)
-	PetActionButton10:SetScale(scaleFactor*60)
+	PetActionButton1:SetScale(scaleFactor*60/100)
+	PetActionButton2:SetScale(scaleFactor*60/100)
+	PetActionButton3:SetScale(scaleFactor*60/100)
+	PetActionButton4:SetScale(scaleFactor*60/100)
+	PetActionButton5:SetScale(scaleFactor*60/100)
+	PetActionButton6:SetScale(scaleFactor*60/100)
+	PetActionButton7:SetScale(scaleFactor*60/100)
+	PetActionButton8:SetScale(scaleFactor*60/100)
+	PetActionButton9:SetScale(scaleFactor*60/100)
+	PetActionButton10:SetScale(scaleFactor*60/100)
 
-	PetActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
-	PetActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
-	PetActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
-	PetActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
-	PetActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
-	PetActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
-	PetActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
-	PetActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
-	PetActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
-	PetActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
+	PetActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-280,193)
+	PetActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-247,193)
+	PetActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-214,193)
+	PetActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-181,193)
+	PetActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-148,193)
+	PetActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-115,193)
+	PetActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",-82,193)
+	PetActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",-49,193)
+	PetActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",-16,193)
+	PetActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",17,193)
 
-	--PetActionButton1.ignoreFramePositionManager = true
-	--PetActionButton2.ignoreFramePositionManager = true
-	--PetActionButton3.ignoreFramePositionManager = true
-	--PetActionButton4.ignoreFramePositionManager = true
-	--PetActionButton5.ignoreFramePositionManager = true
-	--PetActionButton6.ignoreFramePositionManager = true
-	--PetActionButton7.ignoreFramePositionManager = true
-	--PetActionButton8.ignoreFramePositionManager = true
-	--PetActionButton9.ignoreFramePositionManager = true
-	--PetActionButton10.ignoreFramePositionManager = true
+	PetActionButton1.ignoreFramePositionManager = true
+	PetActionButton2.ignoreFramePositionManager = true
+	PetActionButton3.ignoreFramePositionManager = true
+	PetActionButton4.ignoreFramePositionManager = true
+	PetActionButton5.ignoreFramePositionManager = true
+	PetActionButton6.ignoreFramePositionManager = true
+	PetActionButton7.ignoreFramePositionManager = true
+	PetActionButton8.ignoreFramePositionManager = true
+	PetActionButton9.ignoreFramePositionManager = true
+	PetActionButton10.ignoreFramePositionManager = true
 
 
 	--Setup Left Multibar

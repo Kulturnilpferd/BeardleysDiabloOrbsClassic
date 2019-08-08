@@ -301,11 +301,10 @@ local function reconfigUI()
 	MultiBarRightButton1:ClearAllPoints()
 	MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-3,185)
 
-	CastingBarFrame:SetScale(scaleFactor*80/100)
+	--CastingBarFrame:ClearAllPoints()
+	CastingBarFrame:SetScale(scaleFactor*72/100)
 
-	CastingBarFrame:ClearAllPoints()
-	CastingBarFrame:SetPoint("CENTER", 0, 500)	
-
+	
 	--Setup Chatframes
 	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
 	setFrameStratLevel(ChatFrame1EditBox, "MEDIUM", 1)

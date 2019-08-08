@@ -19,10 +19,11 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,offsetY,height,width)
+local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
 	local artworkFrame = CreateFrame("Frame",frameName,parentFrame)
 	artworkFrame:SetPoint("BOTTOM",offsetX,offsetY)
 	artworkFrame:SetFrameStrata(FrameStrata)
+	artworkFrame:SetFrameLevel(FrameLevel)
 	artworkFrame:SetHeight(height)
 	artworkFrame:SetWidth(width)
 	artworkFrame.texture = artworkFrame:CreateTexture(nil,"OVERLAY")
@@ -32,9 +33,14 @@ local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,of
 end
 
 local function createArtwork()
-	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",1,-4,127,491)
-	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","HIGH",-325,0,200,200)
-	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","HIGH",325,0,200,200)
+	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
+	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
+	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
+end
+
+local function setFrameStratLevel(frame, strata, level)
+	frame:SetFrameStrata(strata)
+	frame:SetFrameLevel(level)
 end
 
 local function updateHealthOrb()
@@ -301,26 +307,26 @@ local function reconfigUI()
 	CastingBarFrame:SetPoint("CENTER", 0, 500)	
 
 	--Setup Chatframes
-	ChatFrame1:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame1EditBox, "MEDIUM", 1)
 
-	ChatFrame2:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame2, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame2EditBox, "MEDIUM", 1)
 
-	ChatFrame3:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame3, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame3EditBox, "MEDIUM", 1)
 
-	ChatFrame4:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame4, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame4EditBox, "MEDIUM", 1)
 
-	ChatFrame5:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame5, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame5EditBox, "MEDIUM", 1)
 
-	ChatFrame6:SetFrameStrata("HIGH")	
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame6, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame6EditBox, "MEDIUM", 1)
 
-	ChatFrame7:SetFrameStrata("HIGH")
-	ChatFrame1:SetFrameLevel(9)
+	setFrameStratLevel(ChatFrame7, "MEDIUM", 1)
+	setFrameStratLevel(ChatFrame7EditBox, "MEDIUM", 1)
 
 	PetActionBarFrame:ClearAllPoints()
 	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
@@ -502,6 +508,12 @@ local function updatePowerType()
 	end
 	if (powerType == 1) then -- Rage
 		BDOMod_BlueOrb:SetVertexColor(1.0,0.15,0.15)
+		--BDOMod_BlueOrb:SetAlpha(0.95)
+		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
+		return
+	end
+	if (powerType == 2) then -- Focus
+		BDOMod_BlueOrb:SetVertexColor(1.0,0.4,0.03)
 		--BDOMod_BlueOrb:SetAlpha(0.95)
 		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
 		return

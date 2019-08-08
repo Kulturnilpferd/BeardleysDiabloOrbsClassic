@@ -330,7 +330,6 @@ local function reconfigUI()
 	PetActionBarFrame:ClearAllPoints()
 	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
 	PetActionBarFrame:SetScale(scaleFactor*60/100)
-	PetActionBarFrame:Show()
 	PetActionBarFrame.ignoreFramePositionManager = true
 
 	

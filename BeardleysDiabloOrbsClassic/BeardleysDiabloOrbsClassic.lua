@@ -19,11 +19,10 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 end
 
-local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
+local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,offsetX,offsetY,height,width)
 	local artworkFrame = CreateFrame("Frame",frameName,parentFrame)
 	artworkFrame:SetPoint("BOTTOM",offsetX,offsetY)
 	artworkFrame:SetFrameStrata(FrameStrata)
-	artworkFrame:SetFrameLevel(FrameLevel)
 	artworkFrame:SetHeight(height)
 	artworkFrame:SetWidth(width)
 	artworkFrame.texture = artworkFrame:CreateTexture(nil,"OVERLAY")
@@ -33,9 +32,9 @@ local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel
 end
 
 local function createArtwork()
-	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
-	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
-	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
+	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",1,-4,127,491)
+	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","HIGH",-325,0,200,200)
+	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","HIGH",325,0,200,200)
 end
 
 local function updateHealthOrb()
@@ -54,21 +53,23 @@ local function updateManaOrb()
 	BDOMod_BlueOrb:SetTexCoord(0, 1, 1-manaPercent, 1)
 end
 
-local function setFrameStratLevel(frame, strata, level)
-	frame:SetFrameStrata(strata)
-	frame:SetFrameLevel(level)
-end
-
 local function reconfigUI()
 	--SetCVar("showHonorAsExperience",0)
-	SetCVar("uiScale", .9)
-	SetCVar("useUiScale",1)
+	--SetCVar("uiScale", .9)
+	--SetCVar("useUiScale",1)
 	
-	MainMenuBarArtFrame.PageNumber:Hide()
-	MainMenuBarArtFrame.LeftEndCap:Hide()
-	MainMenuBarArtFrame.RightEndCap:Hide()
-	MainMenuBarArtFrameBackground:Hide()
-	MicroButtonAndBagsBar.MicroBagBar:Hide()
+	--MainMenuBarArtFrame.PageNumber:Hide()
+	MainMenuBarRightEndCap:Hide()
+	MainMenuBarLeftEndCap:Hide()
+	--MainMenuBarArtFrameBackground:Hide()
+	--MainMenuBarArtFrame:SetScale(0.0001)
+	--MainMenuBarOverlayFrame:SetScale(0.0001)
+	--MicroButtonAndBagsBar.MicroBagBar:Hide()
+	MainMenuBarTexture0:Hide()
+	MainMenuBarTexture1:Hide()
+	MainMenuBarTexture2:Hide()
+	MainMenuBarTexture3:Hide()
+	MainMenuBarPageNumber:Hide()
 
 	BDOMod_HealthOrb:SetScale(scaleFactor*70/100)
 	BDOMod_ManaOrb:SetScale(scaleFactor*70/100)
@@ -106,18 +107,19 @@ local function reconfigUI()
 	ActionButton11:SetScale(scaleFactor*60/100)
 	ActionButton12:SetScale(scaleFactor*60/100)
 
-	ActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,28)
-	ActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,28)
-	ActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,28)
-	ActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,28)
-	ActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,28)
-	ActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,28)
-	ActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,28)
-	ActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,28)
-	ActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,28)
-	ActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,28)
-	ActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,28)
-	ActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,28)
+	
+	ActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
+	ActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
+	ActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
+	ActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
+	ActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
+	ActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
+	ActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
+	ActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
+	ActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
+	ActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
+	ActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,29)
+	ActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,29)
 
 	ActionButton1.ignoreFramePositionManager = true
 	ActionButton2.ignoreFramePositionManager = true
@@ -145,38 +147,38 @@ local function reconfigUI()
 	PetActionButton9:ClearAllPoints()
 	PetActionButton10:ClearAllPoints()
 
-	PetActionButton1:SetScale(scaleFactor*60/100)
-	PetActionButton2:SetScale(scaleFactor*60/100)
-	PetActionButton3:SetScale(scaleFactor*60/100)
-	PetActionButton4:SetScale(scaleFactor*60/100)
-	PetActionButton5:SetScale(scaleFactor*60/100)
-	PetActionButton6:SetScale(scaleFactor*60/100)
-	PetActionButton7:SetScale(scaleFactor*60/100)
-	PetActionButton8:SetScale(scaleFactor*60/100)
-	PetActionButton9:SetScale(scaleFactor*60/100)
-	PetActionButton10:SetScale(scaleFactor*60/100)
+	PetActionButton1:SetScale(scaleFactor*60)
+	PetActionButton2:SetScale(scaleFactor*60)
+	PetActionButton3:SetScale(scaleFactor*60)
+	PetActionButton4:SetScale(scaleFactor*60)
+	PetActionButton5:SetScale(scaleFactor*60)
+	PetActionButton6:SetScale(scaleFactor*60)
+	PetActionButton7:SetScale(scaleFactor*60)
+	PetActionButton8:SetScale(scaleFactor*60)
+	PetActionButton9:SetScale(scaleFactor*60)
+	PetActionButton10:SetScale(scaleFactor*60)
 
-	PetActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-280,193)
-	PetActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-247,193)
-	PetActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-214,193)
-	PetActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-181,193)
-	PetActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-148,193)
-	PetActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-115,193)
-	PetActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",-82,193)
-	PetActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",-49,193)
-	PetActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",-16,193)
-	PetActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",17,193)
+	PetActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
+	PetActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
+	PetActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
+	PetActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
+	PetActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
+	PetActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
+	PetActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
+	PetActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
+	PetActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
+	PetActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
 
-	PetActionButton1.ignoreFramePositionManager = true
-	PetActionButton2.ignoreFramePositionManager = true
-	PetActionButton3.ignoreFramePositionManager = true
-	PetActionButton4.ignoreFramePositionManager = true
-	PetActionButton5.ignoreFramePositionManager = true
-	PetActionButton6.ignoreFramePositionManager = true
-	PetActionButton7.ignoreFramePositionManager = true
-	PetActionButton8.ignoreFramePositionManager = true
-	PetActionButton9.ignoreFramePositionManager = true
-	PetActionButton10.ignoreFramePositionManager = true
+	--PetActionButton1.ignoreFramePositionManager = true
+	--PetActionButton2.ignoreFramePositionManager = true
+	--PetActionButton3.ignoreFramePositionManager = true
+	--PetActionButton4.ignoreFramePositionManager = true
+	--PetActionButton5.ignoreFramePositionManager = true
+	--PetActionButton6.ignoreFramePositionManager = true
+	--PetActionButton7.ignoreFramePositionManager = true
+	--PetActionButton8.ignoreFramePositionManager = true
+	--PetActionButton9.ignoreFramePositionManager = true
+	--PetActionButton10.ignoreFramePositionManager = true
 
 
 	--Setup Left Multibar
@@ -299,28 +301,27 @@ local function reconfigUI()
 	CastingBarFrame:SetPoint("CENTER", 0, 500)	
 
 	--Setup Chatframes
-	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame1EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame2, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame2EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame3, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame3EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame4, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame4EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame5, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame5EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame6, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame6EditBox, "MEDIUM", 1)
-	
-	setFrameStratLevel(ChatFrame7, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame7EditBox, "MEDIUM", 1)
-	
-	
+	ChatFrame1:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame2:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame3:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame4:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame5:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame6:SetFrameStrata("HIGH")	
+	ChatFrame1:SetFrameLevel(9)
+
+	ChatFrame7:SetFrameStrata("HIGH")
+	ChatFrame1:SetFrameLevel(9)
+
 	PetActionBarFrame:ClearAllPoints()
 	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
 	PetActionBarFrame:SetScale(scaleFactor*60/100)
@@ -331,78 +332,106 @@ local function reconfigUI()
 	CharacterMicroButton:ClearAllPoints()
 	SpellbookMicroButton:ClearAllPoints()
 	TalentMicroButton:ClearAllPoints()
-	AchievementMicroButton:ClearAllPoints()
 	QuestLogMicroButton:ClearAllPoints()
-	GuildMicroButton:ClearAllPoints()
-	LFDMicroButton:ClearAllPoints()
-	CollectionsMicroButton:ClearAllPoints()
-	EJMicroButton:ClearAllPoints()
-	StoreMicroButton:ClearAllPoints()
-	MainMenuMicroButton:ClearAllPoints()	
+	SocialsMicroButton:ClearAllPoints()
+	WorldMapMicroButton:ClearAllPoints()
+	MainMenuMicroButton:ClearAllPoints()
+	HelpMicroButton:ClearAllPoints()
 	MainMenuBarBackpackButton:ClearAllPoints()
 	CharacterBag0Slot:ClearAllPoints()
 	CharacterBag1Slot:ClearAllPoints()
 	CharacterBag2Slot:ClearAllPoints()
 	CharacterBag3Slot:ClearAllPoints()
 	
-
-	--Micro Buttons	
-	CharacterMicroButton:SetScale(scaleFactor*40/100)
-	SpellbookMicroButton:SetScale(scaleFactor*40/100)
-	TalentMicroButton:SetScale(scaleFactor*40/100)
-	AchievementMicroButton:SetScale(scaleFactor*40/100)
-	QuestLogMicroButton:SetScale(scaleFactor*40/100)
-	GuildMicroButton:SetScale(scaleFactor*40/100)
-	LFDMicroButton:SetScale(scaleFactor*40/100)
-	CollectionsMicroButton:SetScale(scaleFactor*40/100)
-	EJMicroButton:SetScale(scaleFactor*40/100)
-	StoreMicroButton:SetScale(scaleFactor*40/100)
-	MainMenuMicroButton:SetScale(scaleFactor*40/100)	
-
-	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-125,0)
-	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-100,0)
-	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-75,0)
-	AchievementMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-50,0)
-	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-25,0)
-	GuildMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",0,0)
-	LFDMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",25,0)
-	CollectionsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",50,0)
-	EJMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",75,0)
-	StoreMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",100,0) 
-	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",125,0)
+	MainMenuBarPerformanceBarFrame:ClearAllPoints()
+	MainMenuBarPerformanceBarFrame:SetScale(scaleFactor*35/100)
+	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",83,-10)
 	
+	
+	CharacterMicroButton:SetScale(scaleFactor*42/100)
+	SpellbookMicroButton:SetScale(scaleFactor*42/100)
+	TalentMicroButton:SetScale(scaleFactor*42/100)
+	QuestLogMicroButton:SetScale(scaleFactor*42/100)
+	SocialsMicroButton:SetScale(scaleFactor*42/100)
+	WorldMapMicroButton:SetScale(scaleFactor*42/100)
+	MainMenuMicroButton:SetScale(scaleFactor*42/100)
+	HelpMicroButton:SetScale(scaleFactor*42/100)
+	MainMenuBarBackpackButton:SetScale(scaleFactor*38/100)
+	CharacterBag0Slot:SetScale(scaleFactor*38/100)
+	CharacterBag1Slot:SetScale(scaleFactor*38/100)
+	CharacterBag2Slot:SetScale(scaleFactor*38/100)
+	CharacterBag3Slot:SetScale(scaleFactor*38/100)
+
+	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-125,-2)
+	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-100,-2)
+	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-75,-2)
+	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-50,-2)
+	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-25,-2)
+	WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",0,-2)
+	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",25,-2)
+	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",50,-2)
+
+	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",400,1)
+	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",360,1)
+	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",320,1)
+	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",280,1)
+	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",240,1)
+
 	CharacterMicroButton.ignoreFramePositionManager = true
 	SpellbookMicroButton.ignoreFramePositionManager = true
 	TalentMicroButton.ignoreFramePositionManager = true
-	AchievementMicroButton.ignoreFramePositionManager = true
 	QuestLogMicroButton.ignoreFramePositionManager = true
-	GuildMicroButton.ignoreFramePositionManager = true
-	LFDMicroButton.ignoreFramePositionManager = true
-	CollectionsMicroButton.ignoreFramePositionManager = true
-	EJMicroButton.ignoreFramePositionManager = true
-	StoreMicroButton.ignoreFramePositionManager = true
 	MainMenuMicroButton.ignoreFramePositionManager = true
-	
-	
-	--Bag slots
-	MainMenuBarBackpackButton:SetScale(scaleFactor*32/100)
-	CharacterBag0Slot:SetScale(scaleFactor*42/100)
-	CharacterBag1Slot:SetScale(scaleFactor*42/100)
-	CharacterBag2Slot:SetScale(scaleFactor*42/100)
-	CharacterBag3Slot:SetScale(scaleFactor*42/100)
-
-	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",475,1)
-	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",331,1)
-	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",301,1)
-	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",271,1)
-	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",241,1)
-	
 	MainMenuBarBackpackButton.ignoreFramePositionManager = true
 	CharacterBag0Slot.ignoreFramePositionManager = true
 	CharacterBag1Slot.ignoreFramePositionManager = true
 	CharacterBag2Slot.ignoreFramePositionManager = true
 	CharacterBag3Slot.ignoreFramePositionManager = true
 
+	--ShapeshiftButton1:ClearAllPoints()
+	--ShapeshiftButton1:SetScale(scaleFactor*48)
+	--ShapeshiftButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
+
+	--ShapeshiftButton2:ClearAllPoints()
+	--ShapeshiftButton2:SetScale(scaleFactor*48)
+	--ShapeshiftButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
+
+	--ShapeshiftButton3:ClearAllPoints()
+	--ShapeshiftButton3:SetScale(scaleFactor*48)
+	--ShapeshiftButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-254,1)
+
+	--ShapeshiftButton4:ClearAllPoints()
+	--ShapeshiftButton4:SetScale(scaleFactor*48)
+	--ShapeshiftButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-222,1)
+
+	--ShapeshiftButton5:ClearAllPoints()
+	--ShapeshiftButton5:SetScale(scaleFactor*48)
+	--ShapeshiftButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-190,1)
+
+	--ShapeshiftButton6:ClearAllPoints()
+	--ShapeshiftButton6:SetScale(scaleFactor*48)
+	--ShapeshiftButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
+
+	--MainMenuExpBar:ClearAllPoints()
+	--MainMenuExpBar:SetScale(scaleFactor*31)
+	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--249
+
+	--ReputationWatchBar:ClearAllPoints()
+	--ReputationWatchBar:SetScale(scaleFactor*31)
+	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235
+
+	ActionBarUpButton:ClearAllPoints()
+	ActionBarUpButton:SetScale(scaleFactor*46/100)
+	ActionBarUpButton:SetPoint("BOTTOM", UIParent, "BOTTOM",358,42)
+
+	ActionBarDownButton:ClearAllPoints()
+	ActionBarDownButton:SetScale(scaleFactor*46/100)
+	ActionBarDownButton:SetPoint("BOTTOM", UIParent, "BOTTOM",358,25)
+
+	--Needs a rethink
+	--TutorialFrameAlertButton1:ClearAllPoints()
+	--TutorialFrameAlertButton1:SetScale(scaleFactor*66/100)
+	--TutorialFrameAlertButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",0,250)
 	
 	--Stancebar
 	StanceButton1:ClearAllPoints()
@@ -430,22 +459,20 @@ local function reconfigUI()
 	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-215,1)		
 
 	
-	StatusTrackingBarManager:Hide() -- Need to move that fucking bar
+	--StatusTrackingBarManager:Hide() -- Need to move that fucking bar
 	--StatusTrackingBarManager:ClearAllPoints()
 	--StatusTrackingBarManager:SetScale(scaleFactor*31/100)
 	--StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
 	
+	--Need to Hook the Script and position it again (Hook the Shit to ReputationWatchBar OnShow)
 	--ReputationWatchBar:ClearAllPoints()
 	--ReputationWatchBar:SetScale(scaleFactor*31/100)
-	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235
-
-	ActionBarUpButton:ClearAllPoints()
-	ActionBarUpButton:SetScale(scaleFactor*42/100)
-	ActionBarUpButton:SetPoint("BOTTOM", UIParent, "BOTTOM",392,54)
+	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,241)--235
 	
-	ActionBarDownButton:ClearAllPoints()
-	ActionBarDownButton:SetScale(scaleFactor*42/100)
-	ActionBarDownButton:SetPoint("BOTTOM", UIParent, "BOTTOM",392,38)
+	MainMenuExpBar:ClearAllPoints()
+	MainMenuExpBar:SetScale(scaleFactor*31/100)
+	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
+
 end
 
 local function setupOrbs()
@@ -475,12 +502,6 @@ local function updatePowerType()
 	end
 	if (powerType == 1) then -- Rage
 		BDOMod_BlueOrb:SetVertexColor(1.0,0.15,0.15)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
-		return
-	end
-	if (powerType == 2) then -- Focus
-		BDOMod_BlueOrb:SetVertexColor(1.0,0.4,0.03)
 		--BDOMod_BlueOrb:SetAlpha(0.95)
 		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
 		return

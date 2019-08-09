@@ -59,6 +59,23 @@ local function updateManaOrb()
 	BDOMod_BlueOrb:SetTexCoord(0, 1, 1-manaPercent, 1)
 end
 
+local function handleExpReputationBars()
+	if MainMenuExpBar:IsVisible() then
+		if ReputationWatchBar:IsVisible() then
+			ReputationWatchBar:ClearAllPoints()
+			ReputationWatchBar:SetScale(scaleFactor*31/100)
+			ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,236)--235
+			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,222)--242
+		else
+			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
+		end
+	else
+		ReputationWatchBar:ClearAllPoints()
+		ReputationWatchBar:SetScale(scaleFactor*31/100)
+		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,235)--235
+	end
+end
+
 local function reconfigUI()
 	--SetCVar("showHonorAsExperience",0)
 	--SetCVar("uiScale", .9)
@@ -461,22 +478,15 @@ local function reconfigUI()
 	StanceButton6:ClearAllPoints()
 	StanceButton6:SetScale(scaleFactor*42/100)
 	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-215,1)		
-
 	
 	--StatusTrackingBarManager:Hide() -- Need to move that fucking bar
 	--StatusTrackingBarManager:ClearAllPoints()
 	--StatusTrackingBarManager:SetScale(scaleFactor*31/100)
 	--StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
 	
-	--Need to Hook the Script and position it again (Hook the Shit to ReputationWatchBar OnShow)
-	--ReputationWatchBar:ClearAllPoints()
-	--ReputationWatchBar:SetScale(scaleFactor*31/100)
-	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,241)--235
-	
 	MainMenuExpBar:ClearAllPoints()
 	MainMenuExpBar:SetScale(scaleFactor*31/100)
-	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-
+	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242	
 end
 
 local function setupOrbs()
@@ -530,11 +540,19 @@ local function updatePowerType()
 	end
 end
 
+local function hookingScripts()
+	ReputationWatchBar:HookScript("OnEvent", function(self)
+		handleExpReputationBars()
+	end)
+end
+
 function BDOMod_OnEvent(event)
 	if (event=="PLAYER_ENTERING_WORLD") then 
 		setupOrbs()
 		createArtwork()
 		reconfigUI()
+		hookingScripts()
+		handleExpReputationBars()
 		updatePowerType()
 		updateHealthOrb()
 		updateManaOrb()

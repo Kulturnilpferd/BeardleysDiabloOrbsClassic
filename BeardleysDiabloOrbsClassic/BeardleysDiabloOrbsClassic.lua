@@ -5,7 +5,7 @@
 ----------------------------
 --        Settings        --
 ----------------------------
-scaleFactor = 1.5 -- With this value you can scale the whole UI. Menu with settings is comming soon...
+scaleFactor = 1.225 -- With this value you can scale the whole UI. Menu with settings is comming soon...
 ----------------------------
 ----------------------------
 
@@ -319,7 +319,7 @@ local function reconfigUI()
 	MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-3,185)
 
 	--CastingBarFrame:ClearAllPoints()
-	CastingBarFrame:SetScale(scaleFactor*72/100)
+	CastingBarFrame:SetScale(scaleFactor*75/100)
 
 	
 	--Setup Chatframes

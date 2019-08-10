@@ -367,8 +367,9 @@ local function reconfigUI()
 	CharacterBag3Slot:ClearAllPoints()
 	
 	MainMenuBarPerformanceBarFrame:ClearAllPoints()
-	MainMenuBarPerformanceBarFrame:SetScale(scaleFactor*35/100)
-	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",83,-10)
+	MainMenuBarPerformanceBarFrame:SetScale(scaleFactor*33/100)
+	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",122,-9)
+	setFrameStratLevel(MainMenuBarPerformanceBarFrame,"MEDIUM",1)
 	
 	
 	CharacterMicroButton:SetScale(scaleFactor*42/100)
@@ -385,11 +386,11 @@ local function reconfigUI()
 	CharacterBag2Slot:SetScale(scaleFactor*38/100)
 	CharacterBag3Slot:SetScale(scaleFactor*38/100)
 
-	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-101,-2)
-	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-76,-2)
-	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-51,-2)
-	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-26,-2)
-	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",0,-2)
+	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-100,-2)
+	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-75,-2)
+	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-50,-2)
+	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-25,-2)
+	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",1,-2)
 	WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",26,-2)
 	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",51,-2)
 	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",76,-2)
@@ -489,7 +490,6 @@ local function reconfigUI()
 	MainMenuExpBar:ClearAllPoints()
 	MainMenuExpBar:SetScale(scaleFactor*31/100)
 	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	
 end
 
 local function setupOrbs()

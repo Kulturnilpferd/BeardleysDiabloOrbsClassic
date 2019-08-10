@@ -481,7 +481,12 @@ local function reconfigUI()
 	
 	MainMenuExpBar:ClearAllPoints()
 	MainMenuExpBar:SetScale(scaleFactor*31/100)
-	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242	
+	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
+	
+	MainMenuBarVehicleLeaveButton:ClearAllPoints()
+	MainMenuBarVehicleLeaveButton:SetScale(scaleFactor*58/100)
+	MainMenuBarVehicleLeaveButton:SetPoint("BOTTOM", UIParent, "BOTTOM",260,180)--242
+	
 end
 
 local function setupOrbs()
@@ -556,13 +561,7 @@ local function updatePowerType()
 end
 
 local function hookingScripts()
-	ReputationWatchBar:HookScript("OnEvent", function(self)
-		handleExpReputationBars()
-	end)
-	MultiBarRight:HookScript("OnEvent", function(self)
-		handleMultiBars()
-	end)
-	MultiBarLeft:HookScript("OnEvent", function(self)
+	VerticalMultiBarsContainer:HookScript("OnEvent", function(self)
 		handleMultiBars()
 	end)
 end

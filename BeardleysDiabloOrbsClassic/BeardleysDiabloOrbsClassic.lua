@@ -76,11 +76,17 @@ local function handleExpReputationBars()
 		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,235)--235
 	end
 end
+
 local function handleMultiBars()
 	MultiBarRight:SetScale(scaleFactor*58/100)
 	MultiBarLeft:SetScale(scaleFactor*58/100)
 end
 
+local function handleVehicleLeaveButton()
+	MainMenuBarVehicleLeaveButton:ClearAllPoints()
+	MainMenuBarVehicleLeaveButton:SetScale(scaleFactor*58/100)
+	MainMenuBarVehicleLeaveButton:SetPoint("BOTTOM", UIParent, "BOTTOM",260,180)--242
+end
 local function reconfigUI()
 	--SetCVar("showHonorAsExperience",0)
 	--SetCVar("uiScale", .9)
@@ -484,10 +490,6 @@ local function reconfigUI()
 	MainMenuExpBar:SetScale(scaleFactor*31/100)
 	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
 	
-	MainMenuBarVehicleLeaveButton:ClearAllPoints()
-	MainMenuBarVehicleLeaveButton:SetScale(scaleFactor*58/100)
-	MainMenuBarVehicleLeaveButton:SetPoint("BOTTOM", UIParent, "BOTTOM",260,180)--242
-	
 end
 
 local function setupOrbs()
@@ -578,6 +580,7 @@ function BDOMod_OnEvent(event)
 		hookingScripts()
 		handleExpReputationBars()
 		handleMultiBars()
+		handleVehicleLeaveButton()
 		updatePowerType()
 		updateHealthOrb()
 		updateManaOrb()
@@ -599,6 +602,7 @@ function BDOMod_OnEvent(event)
 	end
 	if (event=="SPELL_UPDATE_USABLE") then
 		handleMultiBars()
+		handleVehicleLeaveButton()
 		return
 	end
 end

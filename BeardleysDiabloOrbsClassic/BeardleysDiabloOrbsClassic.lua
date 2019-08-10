@@ -17,6 +17,7 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("UNIT_POWER_UPDATE")
 	BDOMod_HealthOrb:RegisterEvent("UNIT_DISPLAYPOWER")
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
+	BDOMod_HealthOrb:RegisterEvent("SPELL_UPDATE_USABLE")
 end
 
 local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
@@ -561,6 +562,9 @@ local function updatePowerType()
 end
 
 local function hookingScripts()
+	ReputationWatchBar:HookScript("OnEvent", function(self)
+		handleExpReputationBars()
+	end)
 	VerticalMultiBarsContainer:HookScript("OnEvent", function(self)
 		handleMultiBars()
 	end)
@@ -591,6 +595,10 @@ function BDOMod_OnEvent(event)
 	end
 	if (event=="UNIT_POWER_UPDATE") then    
 		updateManaOrb()
+		return
+	end
+	if (event=="SPELL_UPDATE_USABLE") then
+		handleMultiBars()
 		return
 	end
 end

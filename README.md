@@ -1,4 +1,5 @@
 # Beardley-s-Diablo-Orbs-Classic
 A WoW UI overhaul for WoW Classic (retail)
 
-Doesn't work ATM because i must go through Shittzards new UI fuck!
+Works now like a charm.
+If there are some bugs feel free to report em <3

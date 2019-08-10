@@ -5,7 +5,7 @@
 ----------------------------
 --        Settings        --
 ----------------------------
-scaleFactor = 1.225 -- With this value you can scale the whole UI. Menu with settings is comming soon...
+scaleFactor = 1.35 -- With this value you can scale the whole UI. Menu with settings is comming soon...
 ----------------------------
 ----------------------------
 
@@ -74,6 +74,10 @@ local function handleExpReputationBars()
 		ReputationWatchBar:SetScale(scaleFactor*31/100)
 		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,235)--235
 	end
+end
+local function handleMultiBars()
+	MultiBarRight:SetScale(scaleFactor*58/100)
+	MultiBarLeft:SetScale(scaleFactor*58/100)
 end
 
 local function reconfigUI()
@@ -309,18 +313,9 @@ local function reconfigUI()
 	MultiBarBottomRightButton10.ignoreFramePositionManager = true
 	MultiBarBottomRightButton11.ignoreFramePositionManager = true
 	MultiBarBottomRightButton12.ignoreFramePositionManager = true
-
-	MultiBarLeft:SetScale(scaleFactor*60/100)	
-	MultiBarLeftButton1:ClearAllPoints()
-	MultiBarLeftButton1:SetPoint("RIGHT",UIParent,"RIGHT",-45,185)
-
-	MultiBarRight:SetScale(scaleFactor*60/100)
-	MultiBarRightButton1:ClearAllPoints()
-	MultiBarRightButton1:SetPoint("RIGHT",UIParent,"RIGHT",-3,185)
-
+	
 	--CastingBarFrame:ClearAllPoints()
 	CastingBarFrame:SetScale(scaleFactor*75/100)
-
 	
 	--Setup Chatframes
 	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
@@ -564,6 +559,12 @@ local function hookingScripts()
 	ReputationWatchBar:HookScript("OnEvent", function(self)
 		handleExpReputationBars()
 	end)
+	MultiBarRight:HookScript("OnEvent", function(self)
+		handleMultiBars()
+	end)
+	MultiBarLeft:HookScript("OnEvent", function(self)
+		handleMultiBars()
+	end)
 end
 
 function BDOMod_OnEvent(event)
@@ -573,6 +574,7 @@ function BDOMod_OnEvent(event)
 		reconfigUI()
 		hookingScripts()
 		handleExpReputationBars()
+		handleMultiBars()
 		updatePowerType()
 		updateHealthOrb()
 		updateManaOrb()

@@ -351,7 +351,6 @@ local function reconfigUI()
 	PetActionBarFrame:SetScale(scaleFactor*60/100)
 	PetActionBarFrame.ignoreFramePositionManager = true
 
-	
 	CharacterMicroButton:ClearAllPoints()
 	SpellbookMicroButton:ClearAllPoints()
 	TalentMicroButton:ClearAllPoints()
@@ -366,13 +365,6 @@ local function reconfigUI()
 	CharacterBag1Slot:ClearAllPoints()
 	CharacterBag2Slot:ClearAllPoints()
 	CharacterBag3Slot:ClearAllPoints()
-	
-	
-	
-	
-	
-	
-	
 	
 	CharacterMicroButton:SetScale(scaleFactor*42/100)
 	SpellbookMicroButton:SetScale(scaleFactor*42/100)
@@ -389,15 +381,15 @@ local function reconfigUI()
 	CharacterBag2Slot:SetScale(scaleFactor*38/100)
 	CharacterBag3Slot:SetScale(scaleFactor*38/100)
 
-	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-91,-2)
-	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,-2)
-	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-41,-2)
-	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-16,-2)
-	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",1,-9)
-	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",16,-2)
-	WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",41,-2)
-	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",66,-2)
-	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",91,-2)
+	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-92,-2)
+	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-67,-2)
+	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-42,-2)
+	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-17,-2)
+	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",3,-9)
+	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",17,-2)
+	WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",42,-2)
+	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",67,-2)
+	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",92,-2)
 
 	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",400,1)
 	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",360,1)
@@ -417,30 +409,7 @@ local function reconfigUI()
 	CharacterBag3Slot.ignoreFramePositionManager = true
 	
 	setFrameStratLevel(MainMenuBarPerformanceBarFrame,"MEDIUM",1)
-	--ShapeshiftButton1:ClearAllPoints()
-	--ShapeshiftButton1:SetScale(scaleFactor*48)
-	--ShapeshiftButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
-
-	--ShapeshiftButton2:ClearAllPoints()
-	--ShapeshiftButton2:SetScale(scaleFactor*48)
-	--ShapeshiftButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
-
-	--ShapeshiftButton3:ClearAllPoints()
-	--ShapeshiftButton3:SetScale(scaleFactor*48)
-	--ShapeshiftButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-254,1)
-
-	--ShapeshiftButton4:ClearAllPoints()
-	--ShapeshiftButton4:SetScale(scaleFactor*48)
-	--ShapeshiftButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-222,1)
-
-	--ShapeshiftButton5:ClearAllPoints()
-	--ShapeshiftButton5:SetScale(scaleFactor*48)
-	--ShapeshiftButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-190,1)
-
-	--ShapeshiftButton6:ClearAllPoints()
-	--ShapeshiftButton6:SetScale(scaleFactor*48)
-	--ShapeshiftButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-158,1)		
-
+	
 	--MainMenuExpBar:ClearAllPoints()
 	--MainMenuExpBar:SetScale(scaleFactor*31)
 	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--249

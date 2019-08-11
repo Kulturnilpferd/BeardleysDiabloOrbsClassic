@@ -18,6 +18,7 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("UNIT_DISPLAYPOWER")
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 	BDOMod_HealthOrb:RegisterEvent("SPELL_UPDATE_USABLE")
+	BDOMod_HealthOrb:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
 end
 
 local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
@@ -574,7 +575,7 @@ function BDOMod_OnEvent(event)
 		updateManaOrb()
 		return
 	end
-	if (event=="SPELL_UPDATE_USABLE") then
+	if (event=="SPELL_UPDATE_USABLE" or event=="ACTIONBAR_PAGE_CHANGED") then
 		handleMultiBars()
 		handleVehicleLeaveButton()
 		return

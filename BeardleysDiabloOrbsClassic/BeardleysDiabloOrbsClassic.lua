@@ -35,9 +35,15 @@ local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel
 end
 
 local function createArtwork()
-	actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
-	leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
-	rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
+	if not actionbarBackground then
+		actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
+	end
+	if not leftArtwork then
+		leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
+	end
+	if not rightArtwork then
+		rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
+	end
 end
 
 local function setFrameStratLevel(frame, strata, level)
@@ -434,28 +440,28 @@ local function reconfigUI()
 	
 	--Stancebar
 	StanceButton1:ClearAllPoints()
-	StanceButton1:SetScale(scaleFactor*42/100)
-	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-365,1)
+	StanceButton1:SetScale(scaleFactor*48/100)
+	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
 
 	StanceButton2:ClearAllPoints()
-	StanceButton2:SetScale(scaleFactor*42/100)
-	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-335,1) --62
+	StanceButton2:SetScale(scaleFactor*48/100)
+	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
 
 	StanceButton3:ClearAllPoints()
-	StanceButton3:SetScale(scaleFactor*42/100)
-	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-305,1)
+	StanceButton3:SetScale(scaleFactor*48/100)
+	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-256,1)
 
 	StanceButton4:ClearAllPoints()
-	StanceButton4:SetScale(scaleFactor*42/100)
-	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-275,1)
+	StanceButton4:SetScale(scaleFactor*48/100)
+	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-226,1)
 
 	StanceButton5:ClearAllPoints()
-	StanceButton5:SetScale(scaleFactor*42/100)
-	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-245,1)
+	StanceButton5:SetScale(scaleFactor*48/100)
+	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-196,1)
 
 	StanceButton6:ClearAllPoints()
-	StanceButton6:SetScale(scaleFactor*42/100)
-	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-215,1)		
+	StanceButton6:SetScale(scaleFactor*48/100)
+	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-166,1)		
 	
 	--StatusTrackingBarManager:Hide() -- Need to move that fucking bar
 	--StatusTrackingBarManager:ClearAllPoints()
@@ -576,8 +582,10 @@ function BDOMod_OnEvent(event)
 		return
 	end
 	if (event=="SPELL_UPDATE_USABLE" or event=="ACTIONBAR_PAGE_CHANGED") then
-		handleMultiBars()
-		handleVehicleLeaveButton()
+		if not UnitAffectingCombat("player") then
+			handleMultiBars()
+			handleVehicleLeaveButton()
+		end
 		return
 	end
 end

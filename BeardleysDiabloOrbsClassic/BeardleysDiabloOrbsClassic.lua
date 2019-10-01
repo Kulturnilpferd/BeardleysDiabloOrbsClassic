@@ -76,26 +76,22 @@ local function makeFrameMovable(frame,button)
 	frame:SetMovable(true)
 	frame:EnableMouse(true)
 	frame:SetUserPlaced(true)
-	frame:SetClampedToScreen(true) -- Hier muss ne Variable rein (nicht vergessen die bei IF da unten reinzumachen sonst speichert er die Variable nicht, Button rein ins Menu und gut is...hoffentlich...)
+	frame:SetClampedToScreen(true)
 	
 	
 	frame:SetClampRectInsets(0, 0, 0, 0)
 	frame:RegisterForDrag(btnString)
 	frame:SetScript("OnDragStart", function(self)	
-		--if IsShiftKeyDown() then
-		--	MultiBarRight:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 }})
-		--	MultiBarRight:SetBackdropColor(0,0,0,1)
-		--	MultiBarLeft:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 }})
-		--	MultiBarLeft:SetBackdropColor(0,0,0,1)
+		if IsShiftKeyDown() then
+			frame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 }})
+			frame:SetBackdropColor(0,0,0,1)
 			self:StartMoving()
-		--end
-	
+		end	
 	end)
 	frame:SetScript("OnDragStop", function(self) 	
 		self:StopMovingOrSizing()
-		--Hide Multibar Backdrop
-		MultiBarRight:SetBackdropColor(0,0,0,0)
-		MultiBarLeft:SetBackdropColor(0,0,0,0)
+		frame:SetBackdropColor(0,0,0,0)
+		frame:SetBackdropColor(0,0,0,0)
 	end)
 end
 
@@ -598,7 +594,7 @@ function BDOMod_OnEvent(event)
 		updatePowerType()
 		updateHealthOrb()
 		updateManaOrb()
-		makeFrameMovable(QuestWatchFrame)
+		--makeFrameMovable(QuestWatchFrame)
 		return
 	end 
 	if (event=="UNIT_DISPLAYPOWER") then 

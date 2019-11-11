@@ -139,6 +139,8 @@ local function reconfigUI()
 	MainMenuBarTexture2:Hide()
 	MainMenuBarTexture3:Hide()
 	MainMenuBarPageNumber:Hide()
+	MainMenuBarMaxLevelBar:Hide()
+	MainMenuBarMaxLevelBar:SetScript("OnShow",function() MainMenuBarMaxLevelBar:Hide() end)
 
 	BDOMod_HealthOrb:SetScale(scaleFactor*70/100)
 	BDOMod_ManaOrb:SetScale(scaleFactor*70/100)

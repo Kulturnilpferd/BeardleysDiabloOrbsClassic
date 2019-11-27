@@ -107,7 +107,7 @@ local function handleExpReputationBars()
 	else
 		ReputationWatchBar:ClearAllPoints()
 		ReputationWatchBar:SetScale(scaleFactor*31/100)
-		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,235)--235
+		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--235
 	end
 end
 

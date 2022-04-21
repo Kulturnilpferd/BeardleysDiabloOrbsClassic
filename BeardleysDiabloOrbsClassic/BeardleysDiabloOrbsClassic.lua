@@ -12,8 +12,8 @@ scaleFactor = 1.35 -- With this value you can scale the whole UI. Menu with sett
 
 local images = "Interface\\AddOns\\BeardleysDiabloOrbsClassic\\art\\"
 function BDOMod_OnLoad()
-	BDOMod_HealthOrb:RegisterEvent("UNIT_HEALTH")
-	BDOMod_HealthOrb:RegisterEvent("UNIT_POWER_UPDATE")
+	BDOMod_HealthOrb:RegisterEvent("UNIT_HEALTH_FREQUENT")
+	BDOMod_HealthOrb:RegisterEvent("UNIT_POWER_FREQUENT")
 	BDOMod_HealthOrb:RegisterEvent("UNIT_DISPLAYPOWER")
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 	BDOMod_HealthOrb:RegisterEvent("SPELL_UPDATE_USABLE")
@@ -607,11 +607,11 @@ function BDOMod_OnEvent(event)
 		updateManaOrb()
 		return
 	end
-	if (event=="UNIT_HEALTH") then 
+	if (event=="UNIT_HEALTH_FREQUENT") then 
 		updateHealthOrb()
 		return
 	end
-	if (event=="UNIT_POWER_UPDATE") then    
+	if (event=="UNIT_POWER_FREQUENT") then    
 		updateManaOrb()
 		return
 	end

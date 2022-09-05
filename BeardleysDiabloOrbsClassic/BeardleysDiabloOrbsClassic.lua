@@ -509,7 +509,7 @@ end
 local function setupOrbs()
 	--BDOMod_RedOrb:SetVertexColor(0.85,0.2,0.2)
 	--BDOMod_RedOrb:SetAlpha(0.95)
-	BDOMod_RedOrb:SetVertexColor(0.0,1.0,0.0)
+	BDOMod_RedOrb:SetVertexColor(0.7,0.0,0.0)
 	BDOMod_RedOrb:SetTexCoord(0, 1, 0, 1)
 	
 	BDOMod_HealthText:SetFont("Fonts\\FRIZQT__.TTF", 12)

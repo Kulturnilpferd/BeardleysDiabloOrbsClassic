@@ -404,6 +404,7 @@ local function reconfigUI()
 	CharacterBag1Slot:ClearAllPoints()
 	CharacterBag2Slot:ClearAllPoints()
 	CharacterBag3Slot:ClearAllPoints()
+	HelpOpenWebTicketButton:ClearAllPoints()
 	
 	CharacterMicroButton:SetScale(scaleFactor*42/100)
 	SpellbookMicroButton:SetScale(scaleFactor*42/100)
@@ -421,7 +422,8 @@ local function reconfigUI()
 	CharacterBag1Slot:SetScale(scaleFactor*38/100)
 	CharacterBag2Slot:SetScale(scaleFactor*38/100)
 	CharacterBag3Slot:SetScale(scaleFactor*38/100)
-
+	
+	HelpOpenWebTicketButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-130,-2)
 	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-102,-2)
 	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,-2)
 	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-52,-2)

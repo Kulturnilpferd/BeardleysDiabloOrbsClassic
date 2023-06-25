@@ -384,9 +384,9 @@ local function reconfigUI()
 	setFrameStratLevel(ChatFrame7EditBox, "MEDIUM", 1)
 
 	PetActionBarFrame:ClearAllPoints()
-	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
 	PetActionBarFrame:SetScale(scaleFactor*60/100)
-	PetActionBarFrame.ignoreFramePositionManager = true
+	PetActionBarFrame:SetPoint("BOTTOM", WorldFrame, "BOTTOM",-20,175)
+	
 
 	CharacterMicroButton:ClearAllPoints()
 	SpellbookMicroButton:ClearAllPoints()
@@ -439,21 +439,7 @@ local function reconfigUI()
 	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",280,1)
 	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",240,1)
 
-	CharacterMicroButton.ignoreFramePositionManager = true
-	SpellbookMicroButton.ignoreFramePositionManager = true
-	TalentMicroButton.ignoreFramePositionManager = true
-	AchievementMicroButton.ignoreFramePositionManager = true
-	QuestLogMicroButton.ignoreFramePositionManager = true
-	SocialsMicroButton.ignoreFramePositionManager = true
-	PVPMicroButton.ignoreFramePositionManager = true
-	LFGMicroButton.ignoreFramePositionManager = true
-	MainMenuMicroButton.ignoreFramePositionManager = true
-	HelpMicroButton.ignoreFramePositionManager = true
-	MainMenuBarBackpackButton.ignoreFramePositionManager = true
-	CharacterBag0Slot.ignoreFramePositionManager = true
-	CharacterBag1Slot.ignoreFramePositionManager = true
-	CharacterBag2Slot.ignoreFramePositionManager = true
-	CharacterBag3Slot.ignoreFramePositionManager = true
+
 	
 	--setFrameStratLevel(AchievementMicroButton,"MEDIUM",1)
 	
@@ -628,5 +614,5 @@ function BDOMod_OnEvent(event)
 			handleVehicleLeaveButton()
 		end
 		return
-	end
+	end	
 end

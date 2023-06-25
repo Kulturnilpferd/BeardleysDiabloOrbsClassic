@@ -422,6 +422,7 @@ local function reconfigUI()
 	CharacterBag1Slot:SetScale(scaleFactor*38/100)
 	CharacterBag2Slot:SetScale(scaleFactor*38/100)
 	CharacterBag3Slot:SetScale(scaleFactor*38/100)
+	HelpOpenWebTicketButton:SetScale(scaleFactor*75/100)
 	
 	HelpOpenWebTicketButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-130,-2)
 	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-102,-2)

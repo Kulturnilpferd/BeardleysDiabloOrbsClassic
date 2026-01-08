@@ -52,7 +52,7 @@ end
 
 local function updateHealthOrb()
 	local healthPercent = (UnitHealth("player")/UnitHealthMax("player"))
-	BDOMod_HealthPercentage:SetText(floor(healthPercent * 100))
+	BDOMod_HealthPercentage:SetText(floor(healthPercent * 100).. "%")
 	BDOMod_HealthText:SetText(UnitHealth("player").." / ".. UnitHealthMax("player"))
 	BDOMod_RedOrb:SetHeight(healthPercent * 185)
 	BDOMod_RedOrb:SetTexCoord(0, 1, 1-healthPercent, 1)
@@ -60,7 +60,7 @@ end
 
 local function updateManaOrb()
 	local manaPercent = (UnitPower("player")/UnitPowerMax("player"))
-	BDOMod_ManaPercentage:SetText(floor(manaPercent * 100))
+	BDOMod_ManaPercentage:SetText(floor(manaPercent * 100).. "%")
 	BDOMod_ManaText:SetText(UnitPower("player").." / ".. UnitPowerMax("player"))
 	BDOMod_BlueOrb:SetHeight(manaPercent * 185)
 	BDOMod_BlueOrb:SetTexCoord(0, 1, 1-manaPercent, 1)

@@ -5,7 +5,7 @@
 ----------------------------
 --        Settings        --
 ----------------------------
-scaleFactor = 1.35 -- With this value you can scale the whole UI. Menu with settings is comming soon...
+scaleFactor = 1.5 -- With this value you can scale the whole UI. Menu with settings is comming soon...
 ----------------------------
 ----------------------------
 
@@ -99,8 +99,8 @@ local function handleExpReputationBars()
 		if ReputationWatchBar:IsVisible() then
 			ReputationWatchBar:ClearAllPoints()
 			ReputationWatchBar:SetScale(scaleFactor*31/100)
-			ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,900)--235
-			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,222)--242
+			ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,219)--235
+			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,236)--242
 		else
 			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
 		end

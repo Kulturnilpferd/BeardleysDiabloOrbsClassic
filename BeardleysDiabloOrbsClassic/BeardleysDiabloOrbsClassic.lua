@@ -158,6 +158,7 @@ local BAR_OFFSETS_12 = { -246, -201, -156, -111, -66, -21, 21, 66, 111, 156, 201
 local STANCE_OFFSETS = { -318, -286, -256, -226, -196, -166 }
 
 local function hideMainBarChrome()
+
 	if MainMenuBarRightEndCap then MainMenuBarRightEndCap:Hide() end
 	if MainMenuBarLeftEndCap then MainMenuBarLeftEndCap:Hide() end
 	if MainMenuBarTexture0 then MainMenuBarTexture0:Hide() end
@@ -165,11 +166,28 @@ local function hideMainBarChrome()
 	if MainMenuBarTexture2 then MainMenuBarTexture2:Hide() end
 	if MainMenuBarTexture3 then MainMenuBarTexture3:Hide() end
 	if MainMenuBarPageNumber then MainMenuBarPageNumber:Hide() end
-	if MainMenuBarMaxLevelBar then
-		MainMenuBarMaxLevelBar:Hide()
-		MainMenuBarMaxLevelBar:SetScript("OnShow", function(self) self:Hide() end)
+
+	-- Hide the max level bar and all of its pieces, grey bar at max level made of 5 bars.
+	local maxLevelBars = {
+		MainMenuBarMaxLevelBar,
+		MainMenuMaxLevelBar0,
+		MainMenuMaxLevelBar1,
+		MainMenuMaxLevelBar2,
+		MainMenuMaxLevelBar3,
+	}
+
+	for _, bar in ipairs(maxLevelBars) do
+		if bar then
+			bar:Hide()
+			bar:SetScript("OnShow", function(self)
+				self:Hide()
+			end)
+		end
 	end
 end
+
+
+
 
 local function layoutMainActionBar()
 	for i = 1, 12 do
@@ -348,6 +366,7 @@ end
 ----------------------------------------------------------------------
 
 local function handleExpReputationBars()
+
     if MainStatusTrackingBarContainer and MainStatusTrackingBarContainer:IsShown() then
         MainStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
 
@@ -356,14 +375,20 @@ local function handleExpReputationBars()
 
             lockPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 236)
             lockPoint(MainStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 222)
+
         else
             lockPoint(MainStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 228)
         end
+
     elseif SecondaryStatusTrackingBarContainer and SecondaryStatusTrackingBarContainer:IsShown() then
+
         SecondaryStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
         lockPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 230)
+
     end
 end
+
+
 
 
 
@@ -400,17 +425,31 @@ local function makeFrameMovable(frame, button)
 end
 
 local function hookingScripts()
-	if ReputationWatchBar then
-		ReputationWatchBar:HookScript("OnEvent", function()
-			handleExpReputationBars()
+
+	if MainStatusTrackingBarContainer then
+		MainStatusTrackingBarContainer:HookScript("OnShow", function()
+			if UnitXPMax("player") == 0 and not GetWatchedFactionInfo() then
+				MainStatusTrackingBarContainer:Hide()
+			end
 		end)
 	end
+
+	if SecondaryStatusTrackingBarContainer then
+		SecondaryStatusTrackingBarContainer:HookScript("OnShow", function()
+			if not GetWatchedFactionInfo() then
+				SecondaryStatusTrackingBarContainer:Hide()
+			end
+		end)
+	end
+
 	if VerticalMultiBarsContainer then
 		VerticalMultiBarsContainer:HookScript("OnEvent", function()
 			handleMultiBars()
 		end)
 	end
 end
+
+
 
 
 ----------------------------------------------------------------------
@@ -424,6 +463,10 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("PLAYER_ENTERING_WORLD")
 	BDOMod_HealthOrb:RegisterEvent("SPELL_UPDATE_USABLE")
 	BDOMod_HealthOrb:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
+	BDOMod_HealthOrb:RegisterEvent("PLAYER_LEVEL_UP")
+	BDOMod_HealthOrb:RegisterEvent("UPDATE_EXHAUSTION")
+	BDOMod_HealthOrb:RegisterEvent("UPDATE_FACTION")
+
 end
 
 function BDOMod_OnEvent(event)

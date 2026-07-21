@@ -1,16 +1,422 @@
-----------------------------
-----------------------------
--- Beardley's Diablo Orbs --
--- (c)2019 Kulturnilpferd -- 
-----------------------------
---        Settings        --
-----------------------------
-scaleFactor = 1.35 -- With this value you can scale the whole UI. Menu with settings is comming soon...
-----------------------------
-----------------------------
+----------------------------------------------------------------------
+-- Beardley's Diablo Orbs (Classic)
+-- Original addon (c) 2019 Kulturnilpferd
+-- https://github.com/Kulturnilpferd/BeardleysDiabloOrbsClassic
+-- Repair & clean up code 2026 Valak11173
+----------------------------------------------------------------------
 
+
+----------------------------------------------------------------------
+--  SETTINGS - the only things you should need to touch
+----------------------------------------------------------------------
+scaleFactor = 1.35        -- Scales the whole UI. Bigger number = bigger UI.
+local showPetBar = true   -- set to false to leave the pet/vehicle bar alone
+
+
+----------------------------------------------------------------------
+--  INTERNAL HELPERS
+----------------------------------------------------------------------
+
+-- Sets the point we want, then locks SetPoint/ClearAllPoints so
+-- nothing else can silently move the frame again. Safe to call more
+-- than once on the same frame (e.g. from code that recalculates a
+-- layout at runtime) - it quietly unlocks itself first.
+local function lockPoint(frame, ...)
+	if not frame then return end
+	frame.SetPoint = nil
+	frame.ClearAllPoints = nil
+	frame:ClearAllPoints()
+	frame:SetPoint(...)
+	frame.SetPoint = function() end
+	frame.ClearAllPoints = function() end
+end
+
+local function setFrameStratLevel(frame, strata, level)
+	if not frame then return end
+	frame:SetFrameStrata(strata)
+	frame:SetFrameLevel(level)
+end
+
+-- Runs fn() and, if anything inside errors (usually because a frame
+-- we expect no longer exists on this client), reports it to chat
+-- instead of letting it silently break every other part of the addon.
+local function safeCall(label, fn)
+	local ok, err = pcall(fn)
+	if not ok then
+		print("|cffff4444Beardley's Diablo Orbs:|r '"..label.."' failed - "..tostring(err))
+	end
+end
 
 local images = "Interface\\AddOns\\BeardleysDiabloOrbsClassic\\art\\"
+
+
+----------------------------------------------------------------------
+--  ARTWORK
+----------------------------------------------------------------------
+
+local function addArtworkFrame(frameName, parentFrame, file, frameStrata, frameLevel, offsetX, offsetY, height, width)
+	local artworkFrame = CreateFrame("Frame", frameName, parentFrame)
+	artworkFrame:SetPoint("BOTTOM", offsetX, offsetY)
+	artworkFrame:SetFrameStrata(frameStrata)
+	artworkFrame:SetFrameLevel(frameLevel)
+	artworkFrame:SetHeight(height)
+	artworkFrame:SetWidth(width)
+	artworkFrame.texture = artworkFrame:CreateTexture(nil, "OVERLAY")
+	artworkFrame.texture:SetTexture(file)
+	artworkFrame.texture:SetAllPoints(artworkFrame)
+	return artworkFrame
+end
+
+local function createArtwork()
+	if not actionbarBackground then
+		actionbarBackground = addArtworkFrame(nil, UIParent, images.."bar3.tga", "LOW", 9, 1, -4, 127, 491)
+	end
+	if not leftArtwork then
+		leftArtwork = addArtworkFrame(nil, UIParent, images.."leftArtwork.tga", "MEDIUM", 9, -325, 0, 200, 200)
+	end
+	if not rightArtwork then
+		rightArtwork = addArtworkFrame(nil, UIParent, images.."rightArtwork.tga", "MEDIUM", 9, 325, 0, 200, 200)
+	end
+end
+
+
+----------------------------------------------------------------------
+--  ORBS
+----------------------------------------------------------------------
+
+local function updateHealthOrb()
+	local healthPercent = UnitHealth("player") / UnitHealthMax("player")
+	BDOMod_HealthPercentage:SetText(floor(healthPercent * 100))
+	BDOMod_HealthText:SetText(UnitHealth("player").." / "..UnitHealthMax("player"))
+	BDOMod_RedOrb:SetHeight(healthPercent * 185)
+	BDOMod_RedOrb:SetTexCoord(0, 1, 1 - healthPercent, 1)
+end
+
+local function updateManaOrb()
+	local manaPercent = UnitPower("player") / UnitPowerMax("player")
+	BDOMod_ManaPercentage:SetText(floor(manaPercent * 100))
+	BDOMod_ManaText:SetText(UnitPower("player").." / "..UnitPowerMax("player"))
+	BDOMod_BlueOrb:SetHeight(manaPercent * 185)
+	BDOMod_BlueOrb:SetTexCoord(0, 1, 1 - manaPercent, 1)
+end
+
+local POWER_TYPE_COLORS = {
+	[0] = {0.2, 0.2, 1.0},    -- Mana
+	[1] = {1.0, 0.15, 0.15},  -- Rage
+	[2] = {1.0, 0.4, 0.03},   -- Focus
+	[3] = {1.0, 1.0, 0.0},    -- Energy
+	[6] = {0.2, 0.75, 1.0},   -- Runic Power
+}
+
+local function updatePowerType()
+	local color = POWER_TYPE_COLORS[UnitPowerType("player")]
+	if color and BDOMod_BlueOrb then
+		BDOMod_BlueOrb:SetVertexColor(color[1], color[2], color[3])
+		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
+	end
+end
+
+local function setupOrbs()
+	BDOMod_RedOrb:SetVertexColor(0.7, 0.0, 0.0)
+	BDOMod_RedOrb:SetTexCoord(0, 1, 0, 1)
+
+	BDOMod_HealthText:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	BDOMod_HealthPercentage:SetFont("Fonts\\FRIZQT__.TTF", 25)
+	BDOMod_HealthText:SetText(UnitHealth("player").." / "..UnitHealthMax("player"))
+	BDOMod_HealthPercentage:SetText(100)
+
+	BDOMod_ManaText:SetFont("Fonts\\FRIZQT__.TTF", 12)
+	BDOMod_ManaPercentage:SetFont("Fonts\\FRIZQT__.TTF", 25)
+	BDOMod_ManaText:SetText(UnitPower("player").." / "..UnitPowerMax("player"))
+	BDOMod_ManaPercentage:SetText(100)
+
+	-- Mouseover/click/right-click on the health orb behaves like the stock player frame
+	local healthOrbButton = CreateFrame("Button", nil, BDOMod_HealthOrb, "SecureUnitButtonTemplate")
+	healthOrbButton:SetPoint("BOTTOM", BDOMod_HealthOrb, "BOTTOM", 0, 0)
+	healthOrbButton:SetWidth(185)
+	healthOrbButton:SetHeight(185)
+	healthOrbButton:RegisterForClicks("AnyUp")
+	healthOrbButton:SetAttribute("unit", "player")
+	healthOrbButton:SetAttribute("*type1", "target")
+	healthOrbButton:SetAttribute("*type2", "togglemenu")
+	healthOrbButton:SetScript("OnEnter", function()
+		GameTooltip_SetDefaultAnchor(GameTooltip, UIParent)
+		GameTooltip:SetUnit("player")
+		GameTooltip:Show()
+	end)
+	healthOrbButton:SetScript("OnLeave", function()
+		GameTooltip:Hide()
+	end)
+end
+
+
+----------------------------------------------------------------------
+--  BOTTOM BAR LAYOUT (built once at PLAYER_ENTERING_WORLD)
+----------------------------------------------------------------------
+
+local BAR_OFFSETS_12 = { -246, -201, -156, -111, -66, -21, 21, 66, 111, 156, 201, 246 }
+local STANCE_OFFSETS = { -318, -286, -256, -226, -196, -166 }
+
+local function hideMainBarChrome()
+	if MainMenuBarRightEndCap then MainMenuBarRightEndCap:Hide() end
+	if MainMenuBarLeftEndCap then MainMenuBarLeftEndCap:Hide() end
+	if MainMenuBarTexture0 then MainMenuBarTexture0:Hide() end
+	if MainMenuBarTexture1 then MainMenuBarTexture1:Hide() end
+	if MainMenuBarTexture2 then MainMenuBarTexture2:Hide() end
+	if MainMenuBarTexture3 then MainMenuBarTexture3:Hide() end
+	if MainMenuBarPageNumber then MainMenuBarPageNumber:Hide() end
+	if MainMenuBarMaxLevelBar then
+		MainMenuBarMaxLevelBar:Hide()
+		MainMenuBarMaxLevelBar:SetScript("OnShow", function(self) self:Hide() end)
+	end
+end
+
+local function layoutMainActionBar()
+	for i = 1, 12 do
+		local button = _G["ActionButton"..i]
+		lockPoint(button, "BOTTOM", UIParent, "BOTTOM", BAR_OFFSETS_12[i], 29)
+		if button then button:SetScale(scaleFactor * 60 / 100) end
+	end
+end
+
+local function layoutMultiBarButtons()
+	for i = 1, 12 do
+		local left = _G["MultiBarBottomLeftButton"..i]
+		lockPoint(left, "BOTTOM", UIParent, "BOTTOM", BAR_OFFSETS_12[i], 75)
+		if left then left:SetScale(scaleFactor * 60 / 100) end
+
+		local right = _G["MultiBarBottomRightButton"..i]
+		lockPoint(right, "BOTTOM", UIParent, "BOTTOM", BAR_OFFSETS_12[i], 132)
+		if right then right:SetScale(scaleFactor * 60 / 100) end
+	end
+end
+
+local function layoutStanceBar()
+	for i = 1, 6 do
+		local button = _G["StanceButton"..i]
+		lockPoint(button, "BOTTOM", UIParent, "BOTTOM", STANCE_OFFSETS[i], 1)
+		if button then button:SetScale(scaleFactor * 48 / 100) end
+	end
+end
+
+local function layoutPetBar()
+	if not showPetBar then return end
+	local bar = PetActionBarFrame
+	if not bar then return end
+	if MainMenuExpBar then
+		lockPoint(bar, "BOTTOMLEFT", MainMenuExpBar, "TOPLEFT", -12, 50)
+	else
+		lockPoint(bar, "BOTTOM", UIParent, "BOTTOM", -77, 194)
+	end
+	bar:SetScale(scaleFactor * 60 / 100)
+	-- Blizzard also likes to resize this one back to its default; block that too.
+	bar.SetSize = function() end
+	bar.SetWidth = function() end
+	bar.SetHeight = function() end
+end
+
+local MICRO_BUTTONS_LEFT = {
+	{"CharacterMicroButton", -92},
+	{"SpellbookMicroButton", -67},
+	{"TalentMicroButton", -42},
+	{"QuestLogMicroButton", -17},
+}
+local MICRO_BUTTONS_RIGHT = {
+	{"WorldMapMicroButton", 42},
+	{"HelpMicroButton", 67},
+	{"MainMenuMicroButton", 92},
+	{"SocialsMicroButton", 117},
+}
+
+local function layoutMicroMenu()
+	for _, entry in ipairs(MICRO_BUTTONS_LEFT) do
+		local button = _G[entry[1]]
+		lockPoint(button, "BOTTOM", UIParent, "BOTTOM", entry[2], -2)
+		if button then button:SetScale(scaleFactor * 42 / 100) end
+	end
+	for _, entry in ipairs(MICRO_BUTTONS_RIGHT) do
+		local button = _G[entry[1]]
+		lockPoint(button, "BOTTOM", UIParent, "BOTTOM", entry[2], -2)
+		if button then button:SetScale(scaleFactor * 42 / 100) end
+	end
+
+--Social Button:
+	
+	local socialButton = GuildMicroButton or SocialsMicroButton
+	lockPoint(socialButton, "BOTTOM", UIParent, "BOTTOM", 17, -2)
+	if socialButton then socialButton:SetScale(scaleFactor * 42 / 100) end
+
+--Action Bar Page Number:
+
+	if MainActionBar
+		and MainActionBar.ActionBarPageNumber
+		and MainActionBar.ActionBarPageNumber.Text then
+
+		local pageText = MainActionBar.ActionBarPageNumber.Text
+		lockPoint(pageText, "BOTTOM", UIParent, "BOTTOM", 5, 7)
+		pageText:SetScale(scaleFactor * 62 / 100)
+	end
+
+--Action Bar Arrow Up:
+	
+	if MainActionBar
+		and MainActionBar.ActionBarPageNumber
+		and MainActionBar.ActionBarPageNumber.UpButton then
+
+		local upButton = MainActionBar.ActionBarPageNumber.UpButton
+		lockPoint(upButton, "BOTTOM", UIParent, "BOTTOM", 20, 16) 
+		upButton:SetScale(scaleFactor * 42 / 100)
+	end
+
+--Action Bar Arrow Down:
+
+	if MainActionBar
+		and MainActionBar.ActionBarPageNumber
+		and MainActionBar.ActionBarPageNumber.DownButton then
+
+		local downButton = MainActionBar.ActionBarPageNumber.DownButton
+		lockPoint(downButton, "BOTTOM", UIParent, "BOTTOM", 20, -2) 
+		downButton:SetScale(scaleFactor * 42 / 100)
+	end
+
+	lockPoint(MainMenuBarPerformanceBarFrame, "BOTTOM", UIParent, "BOTTOM", 3, -9)
+	if MainMenuBarPerformanceBarFrame then
+		MainMenuBarPerformanceBarFrame:SetScale(scaleFactor * 33 / 100)
+		setFrameStratLevel(MainMenuBarPerformanceBarFrame, "MEDIUM", 1)
+	end
+end
+
+--Bags:
+
+local BAG_SLOTS = {
+	{"MainMenuBarBackpackButton", 400, 1, 38},
+	{"KeyRingButton", 217, 0, 37},
+	{"CharacterBag0Slot", 360, 1, 38},
+	{"CharacterBag1Slot", 320, 1, 38},
+	{"CharacterBag2Slot", 280, 1, 38},
+	{"CharacterBag3Slot", 240, 1, 38},
+}
+
+local function layoutBags()
+	for _, entry in ipairs(BAG_SLOTS) do
+		local name, x, y, scalePct = entry[1], entry[2], entry[3], entry[4]
+		local button = _G[name]
+		lockPoint(button, "BOTTOM", UIParent, "BOTTOM", x, y)
+		if button then button:SetScale(scaleFactor * scalePct / 100) end
+	end
+end
+
+local function layoutChatFrames()
+	for i = 1, 7 do
+		setFrameStratLevel(_G["ChatFrame"..i], "MEDIUM", 1)
+		setFrameStratLevel(_G["ChatFrame"..i.."EditBox"], "MEDIUM", 1)
+	end
+end
+
+local function reconfigUI()
+	hideMainBarChrome()
+
+	if BDOMod_HealthOrb then BDOMod_HealthOrb:SetScale(scaleFactor * 70 / 100) end
+	if BDOMod_ManaOrb then BDOMod_ManaOrb:SetScale(scaleFactor * 70 / 100) end
+	if actionbarBackground then actionbarBackground:SetScale(scaleFactor * 90 / 100) end
+	if leftArtwork then leftArtwork:SetScale(scaleFactor) end
+	if rightArtwork then rightArtwork:SetScale(scaleFactor) end
+
+	layoutMainActionBar()
+	layoutMultiBarButtons()
+	layoutStanceBar()
+	layoutPetBar()
+	layoutMicroMenu()
+	layoutBags()
+	layoutChatFrames()
+
+	if CastingBarFrame then CastingBarFrame:SetScale(scaleFactor * 75 / 100) end
+
+	lockPoint(ActionBarUpButton, "BOTTOM", UIParent, "BOTTOM", 358, 42)
+	if ActionBarUpButton then ActionBarUpButton:SetScale(scaleFactor * 46 / 100) end
+
+	lockPoint(ActionBarDownButton, "BOTTOM", UIParent, "BOTTOM", 358, 25)
+	if ActionBarDownButton then ActionBarDownButton:SetScale(scaleFactor * 46 / 100) end
+
+	lockPoint(MainMenuExpBar, "BOTTOM", UIParent, "BOTTOM", -3, 228)
+	if MainMenuExpBar then MainMenuExpBar:SetScale(scaleFactor * 31 / 100) end
+end
+
+
+----------------------------------------------------------------------
+--  DYNAMIC BITS - these re-run on their own triggers, not just once
+----------------------------------------------------------------------
+
+local function handleExpReputationBars()
+    if MainStatusTrackingBarContainer and MainStatusTrackingBarContainer:IsShown() then
+        MainStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
+
+        if SecondaryStatusTrackingBarContainer and SecondaryStatusTrackingBarContainer:IsShown() then
+            SecondaryStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
+
+            lockPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 236)
+            lockPoint(MainStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 222)
+        else
+            lockPoint(MainStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 228)
+        end
+    elseif SecondaryStatusTrackingBarContainer and SecondaryStatusTrackingBarContainer:IsShown() then
+        SecondaryStatusTrackingBarContainer:SetScale(scaleFactor * 31 / 100)
+        lockPoint(SecondaryStatusTrackingBarContainer, "BOTTOM", UIParent, "BOTTOM", -3, 230)
+    end
+end
+
+
+
+local function handleMultiBars()
+	if MultiBarRight then MultiBarRight:SetScale(scaleFactor * 58 / 100) end
+	if MultiBarLeft then MultiBarLeft:SetScale(scaleFactor * 58 / 100) end
+end
+
+local function handleVehicleLeaveButton()
+	lockPoint(MainMenuBarVehicleLeaveButton, "BOTTOM", UIParent, "BOTTOM", 260, 180)
+	if MainMenuBarVehicleLeaveButton then
+		MainMenuBarVehicleLeaveButton:SetScale(scaleFactor * 58 / 100)
+	end
+end
+
+-- Unused by default, kept as a utility if you ever want to let a frame
+-- be shift-click dragged around, e.g. makeFrameMovable(SomeFrame)
+local function makeFrameMovable(frame, button)
+	if not frame then return end
+	frame:SetMovable(true)
+	frame:EnableMouse(true)
+	frame:SetUserPlaced(true)
+	frame:SetClampedToScreen(true)
+	frame:SetClampRectInsets(0, 0, 0, 0)
+	frame:RegisterForDrag(button or "LeftButton")
+	frame:SetScript("OnDragStart", function(self)
+		if IsShiftKeyDown() then
+			self:StartMoving()
+		end
+	end)
+	frame:SetScript("OnDragStop", function(self)
+		self:StopMovingOrSizing()
+	end)
+end
+
+local function hookingScripts()
+	if ReputationWatchBar then
+		ReputationWatchBar:HookScript("OnEvent", function()
+			handleExpReputationBars()
+		end)
+	end
+	if VerticalMultiBarsContainer then
+		VerticalMultiBarsContainer:HookScript("OnEvent", function()
+			handleMultiBars()
+		end)
+	end
+end
+
+
+----------------------------------------------------------------------
+--  EVENTS - hooked up from the addon's XML file, keep these names
+----------------------------------------------------------------------
+
 function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("UNIT_HEALTH")
 	BDOMod_HealthOrb:RegisterEvent("UNIT_POWER_UPDATE")
@@ -20,579 +426,38 @@ function BDOMod_OnLoad()
 	BDOMod_HealthOrb:RegisterEvent("ACTIONBAR_PAGE_CHANGED")
 end
 
-local function addArtworkFrame(frameName,parentFrame,file,FrameStrata,FrameLevel,offsetX,offsetY,height,width)
-	local artworkFrame = CreateFrame("Frame",frameName,parentFrame)
-	artworkFrame:SetPoint("BOTTOM",offsetX,offsetY)
-	artworkFrame:SetFrameStrata(FrameStrata)
-	artworkFrame:SetFrameLevel(FrameLevel)
-	artworkFrame:SetHeight(height)
-	artworkFrame:SetWidth(width)
-	artworkFrame.texture = artworkFrame:CreateTexture(nil,"OVERLAY")
-	artworkFrame.texture:SetTexture(file)
-	artworkFrame.texture:SetAllPoints(artworkFrame)
-	return artworkFrame
-end
-
-local function createArtwork()
-	if not actionbarBackground then
-		actionbarBackground = addArtworkFrame(nil,UIParent,images.."bar3.tga","LOW",9,1,-4,127,491)
-	end
-	if not leftArtwork then
-		leftArtwork = addArtworkFrame(nil,UIParent,images.."leftArtwork.tga","MEDIUM",9,-325,0,200,200)
-	end
-	if not rightArtwork then
-		rightArtwork = addArtworkFrame(nil,UIParent,images.."rightArtwork.tga","MEDIUM",9,325,0,200,200)
-	end
-end
-
-local function setFrameStratLevel(frame, strata, level)
-	frame:SetFrameStrata(strata)
-	frame:SetFrameLevel(level)
-end
-
-local function updateHealthOrb()
-	local healthPercent = (UnitHealth("player")/UnitHealthMax("player"))
-	BDOMod_HealthPercentage:SetText(floor(healthPercent * 100))
-	BDOMod_HealthText:SetText(UnitHealth("player").." / ".. UnitHealthMax("player"))
-	BDOMod_RedOrb:SetHeight(healthPercent * 185)
-	BDOMod_RedOrb:SetTexCoord(0, 1, 1-healthPercent, 1)
-end
-
-local function updateManaOrb()
-	local manaPercent = (UnitPower("player")/UnitPowerMax("player"))
-	BDOMod_ManaPercentage:SetText(floor(manaPercent * 100))
-	BDOMod_ManaText:SetText(UnitPower("player").." / ".. UnitPowerMax("player"))
-	BDOMod_BlueOrb:SetHeight(manaPercent * 185)
-	BDOMod_BlueOrb:SetTexCoord(0, 1, 1-manaPercent, 1)
-end
-
-local function makeFrameMovable(frame,button)
-	local btnString = "LeftButton"
-	local factionGroup, factionName = UnitFactionGroup("player")
-	if button then
-		btnString = button
-	end
-	frame:SetMovable(true)
-	frame:EnableMouse(true)
-	frame:SetUserPlaced(true)
-	frame:SetClampedToScreen(true)
-	
-	
-	frame:SetClampRectInsets(0, 0, 0, 0)
-	frame:RegisterForDrag(btnString)
-	frame:SetScript("OnDragStart", function(self)	
-		if IsShiftKeyDown() then
-			frame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background", insets = { left = -1, right = -1, top = -1, bottom = -1 }})
-			frame:SetBackdropColor(0,0,0,1)
-			self:StartMoving()
-		end	
-	end)
-	frame:SetScript("OnDragStop", function(self) 	
-		self:StopMovingOrSizing()
-		frame:SetBackdropColor(0,0,0,0)
-		frame:SetBackdropColor(0,0,0,0)
-	end)
-end
-
-local function handleExpReputationBars()
-	if MainMenuExpBar:IsVisible() then
-		if ReputationWatchBar:IsVisible() then
-			ReputationWatchBar:ClearAllPoints()
-			ReputationWatchBar:SetScale(scaleFactor*31/100)
-			ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,236)--235
-			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,222)--242
-		else
-			MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-		end
-	else
-		ReputationWatchBar:ClearAllPoints()
-		ReputationWatchBar:SetScale(scaleFactor*31/100)
-		ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,230)--235
-	end
-end
-
-local function handleMultiBars()
-	MultiBarRight:SetScale(scaleFactor*58/100)
-	MultiBarLeft:SetScale(scaleFactor*58/100)
-end
-
-local function handleVehicleLeaveButton()
-	MainMenuBarVehicleLeaveButton:ClearAllPoints()
-	MainMenuBarVehicleLeaveButton:SetScale(scaleFactor*58/100)
-	MainMenuBarVehicleLeaveButton:SetPoint("BOTTOM", UIParent, "BOTTOM",260,180)--242
-end
-
-local function reconfigUI()
-	--SetCVar("showHonorAsExperience",0)
-	--SetCVar("uiScale", .9)
-	--SetCVar("useUiScale",1)
-	
-	--MainMenuBarArtFrame.PageNumber:Hide()
-	MainMenuBarRightEndCap:Hide()
-	MainMenuBarLeftEndCap:Hide()
-	--MainMenuBarArtFrameBackground:Hide()
-	--MainMenuBarArtFrame:SetScale(0.0001)
-	--MainMenuBarOverlayFrame:SetScale(0.0001)
-	--MicroButtonAndBagsBar.MicroBagBar:Hide()
-	MainMenuBarTexture0:Hide()
-	MainMenuBarTexture1:Hide()
-	MainMenuBarTexture2:Hide()
-	MainMenuBarTexture3:Hide()
-	MainMenuBarPageNumber:Hide()
-	MainMenuBarMaxLevelBar:Hide()
-	MainMenuBarMaxLevelBar:SetScript("OnShow",function() MainMenuBarMaxLevelBar:Hide() end)
-
-	BDOMod_HealthOrb:SetScale(scaleFactor*70/100)
-	BDOMod_ManaOrb:SetScale(scaleFactor*70/100)
-
-	actionbarBackground:SetScale(scaleFactor*90/100)
-
-	leftArtwork:SetScale(scaleFactor)
-	rightArtwork:SetScale(scaleFactor)	
-
-
-	--Setup Action Bar
-	ActionButton1:ClearAllPoints()
-	ActionButton2:ClearAllPoints()
-	ActionButton3:ClearAllPoints()
-	ActionButton4:ClearAllPoints()
-	ActionButton5:ClearAllPoints()
-	ActionButton6:ClearAllPoints()
-	ActionButton7:ClearAllPoints()
-	ActionButton8:ClearAllPoints()
-	ActionButton9:ClearAllPoints()
-	ActionButton10:ClearAllPoints()
-	ActionButton11:ClearAllPoints()
-	ActionButton12:ClearAllPoints()
-	
-	ActionButton1:SetScale(scaleFactor*60/100)
-	ActionButton2:SetScale(scaleFactor*60/100)
-	ActionButton3:SetScale(scaleFactor*60/100)
-	ActionButton4:SetScale(scaleFactor*60/100)
-	ActionButton5:SetScale(scaleFactor*60/100)
-	ActionButton6:SetScale(scaleFactor*60/100)
-	ActionButton7:SetScale(scaleFactor*60/100)
-	ActionButton8:SetScale(scaleFactor*60/100)
-	ActionButton9:SetScale(scaleFactor*60/100)
-	ActionButton10:SetScale(scaleFactor*60/100)
-	ActionButton11:SetScale(scaleFactor*60/100)
-	ActionButton12:SetScale(scaleFactor*60/100)
-
-	
-	ActionButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,29)
-	ActionButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,29)
-	ActionButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,29)
-	ActionButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,29)
-	ActionButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,29)
-	ActionButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,29)
-	ActionButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,29)
-	ActionButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,29)
-	ActionButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,29)
-	ActionButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,29)
-	ActionButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,29)
-	ActionButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,29)
-
-	ActionButton1.ignoreFramePositionManager = true
-	ActionButton2.ignoreFramePositionManager = true
-	ActionButton3.ignoreFramePositionManager = true
-	ActionButton4.ignoreFramePositionManager = true
-	ActionButton5.ignoreFramePositionManager = true
-	ActionButton6.ignoreFramePositionManager = true
-	ActionButton7.ignoreFramePositionManager = true
-	ActionButton8.ignoreFramePositionManager = true
-	ActionButton9.ignoreFramePositionManager = true
-	ActionButton10.ignoreFramePositionManager = true
-	ActionButton11.ignoreFramePositionManager = true
-	ActionButton12.ignoreFramePositionManager = true
-
-	
-	
-
-
-	--Setup Left Multibar
-	MultiBarBottomLeftButton1:ClearAllPoints()
-	MultiBarBottomLeftButton2:ClearAllPoints()
-	MultiBarBottomLeftButton3:ClearAllPoints()
-	MultiBarBottomLeftButton4:ClearAllPoints()
-	MultiBarBottomLeftButton5:ClearAllPoints()
-	MultiBarBottomLeftButton6:ClearAllPoints()
-	MultiBarBottomLeftButton7:ClearAllPoints()
-	MultiBarBottomLeftButton8:ClearAllPoints()
-	MultiBarBottomLeftButton9:ClearAllPoints()
-	MultiBarBottomLeftButton10:ClearAllPoints()
-	MultiBarBottomLeftButton11:ClearAllPoints()
-	MultiBarBottomLeftButton12:ClearAllPoints()
-
-	MultiBarBottomLeftButton1:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton2:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton3:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton4:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton5:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton6:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton7:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton8:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton9:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton10:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton11:SetScale(scaleFactor*60/100)
-	MultiBarBottomLeftButton12:SetScale(scaleFactor*60/100)
-
-	MultiBarBottomLeftButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,75)
-	MultiBarBottomLeftButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,75)
-	MultiBarBottomLeftButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,75)
-	MultiBarBottomLeftButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,75)
-	MultiBarBottomLeftButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,75)
-	MultiBarBottomLeftButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,75)
-	MultiBarBottomLeftButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,75)
-	MultiBarBottomLeftButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,75)
-	MultiBarBottomLeftButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,75)
-	MultiBarBottomLeftButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,75)
-	MultiBarBottomLeftButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,75)
-	MultiBarBottomLeftButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,75)
-
-	MultiBarBottomLeftButton1.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton2.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton3.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton4.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton5.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton6.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton7.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton8.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton9.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton10.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton11.ignoreFramePositionManager = true
-	MultiBarBottomLeftButton12.ignoreFramePositionManager = true
-
-	--Setup Right Multibar
-	MultiBarBottomRightButton1:ClearAllPoints()
-	MultiBarBottomRightButton2:ClearAllPoints()
-	MultiBarBottomRightButton3:ClearAllPoints()
-	MultiBarBottomRightButton4:ClearAllPoints()
-	MultiBarBottomRightButton5:ClearAllPoints()
-	MultiBarBottomRightButton6:ClearAllPoints()
-	MultiBarBottomRightButton7:ClearAllPoints()
-	MultiBarBottomRightButton8:ClearAllPoints()
-	MultiBarBottomRightButton9:ClearAllPoints()
-	MultiBarBottomRightButton10:ClearAllPoints()
-	MultiBarBottomRightButton11:ClearAllPoints()
-	MultiBarBottomRightButton12:ClearAllPoints()
-
-	MultiBarBottomRightButton1:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton2:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton3:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton4:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton5:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton6:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton7:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton8:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton9:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton10:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton11:SetScale(scaleFactor*60/100)
-	MultiBarBottomRightButton12:SetScale(scaleFactor*60/100)
-
-	MultiBarBottomRightButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-246,132)
-	MultiBarBottomRightButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-201,132)
-	MultiBarBottomRightButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-156,132)
-	MultiBarBottomRightButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-111,132)
-	MultiBarBottomRightButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-66,132)
-	MultiBarBottomRightButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-21,132)
-	MultiBarBottomRightButton7:SetPoint("BOTTOM", UIParent, "BOTTOM",21,132)
-	MultiBarBottomRightButton8:SetPoint("BOTTOM", UIParent, "BOTTOM",66,132)
-	MultiBarBottomRightButton9:SetPoint("BOTTOM", UIParent, "BOTTOM",111,132)
-	MultiBarBottomRightButton10:SetPoint("BOTTOM", UIParent, "BOTTOM",156,132)
-	MultiBarBottomRightButton11:SetPoint("BOTTOM", UIParent, "BOTTOM",201,132)
-	MultiBarBottomRightButton12:SetPoint("BOTTOM", UIParent, "BOTTOM",246,132)
-
-	MultiBarBottomRightButton1.ignoreFramePositionManager = true
-	MultiBarBottomRightButton2.ignoreFramePositionManager = true
-	MultiBarBottomRightButton3.ignoreFramePositionManager = true
-	MultiBarBottomRightButton4.ignoreFramePositionManager = true
-	MultiBarBottomRightButton5.ignoreFramePositionManager = true
-	MultiBarBottomRightButton6.ignoreFramePositionManager = true
-	MultiBarBottomRightButton7.ignoreFramePositionManager = true
-	MultiBarBottomRightButton8.ignoreFramePositionManager = true
-	MultiBarBottomRightButton9.ignoreFramePositionManager = true
-	MultiBarBottomRightButton10.ignoreFramePositionManager = true
-	MultiBarBottomRightButton11.ignoreFramePositionManager = true
-	MultiBarBottomRightButton12.ignoreFramePositionManager = true
-	
-	--CastingBarFrame:ClearAllPoints()
-	CastingBarFrame:SetScale(scaleFactor*75/100)
-	
-	--Setup Chatframes
-	setFrameStratLevel(ChatFrame1, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame1EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame2, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame2EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame3, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame3EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame4, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame4EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame5, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame5EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame6, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame6EditBox, "MEDIUM", 1)
-
-	setFrameStratLevel(ChatFrame7, "MEDIUM", 1)
-	setFrameStratLevel(ChatFrame7EditBox, "MEDIUM", 1)
-
-	--PetActionBarFrame:ClearAllPoints()
-	--PetActionBarFrame:SetScale(scaleFactor*60/100)
-	--PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
-	--PetActionBarFrame.ignoreFramePositionManager = true
-PetActionBarFrame:ClearAllPoints()
---	PetActionBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",-77,194)
---	PetActionBarFrame:SetPoint("BOTTOMLEFT", MainMenuExpBar, "TOPLEFT", -12, 50)
---	PetActionBarFrame:SetScale(scaleFactor*60/100)
---	PetActionBarFrame.ignoreFramePositionManager = true
---	PetActionBarFrame.SetPoint = function() end
---	PetActionBarFrame.SetSize = function() end
---	PetActionBarFrame.SetWidth = function() end
---	PetActionBarFrame.SetHeight = function() end
-
-	CharacterMicroButton:ClearAllPoints()
-	SpellbookMicroButton:ClearAllPoints()
-	TalentMicroButton:ClearAllPoints()
-	QuestLogMicroButton:ClearAllPoints()
-	MainMenuBarPerformanceBarFrame:ClearAllPoints()
-	GuildMicroButton:ClearAllPoints()
-	WorldMapMicroButton:ClearAllPoints()
-	SocialsMicroButton:ClearAllPoints()
-	MainMenuMicroButton:ClearAllPoints()
-	HelpMicroButton:ClearAllPoints()
-	MainMenuBarBackpackButton:ClearAllPoints()
-	KeyRingButton:ClearAllPoints()
-	CharacterBag0Slot:ClearAllPoints()
-	CharacterBag1Slot:ClearAllPoints()
-	CharacterBag2Slot:ClearAllPoints()
-	CharacterBag3Slot:ClearAllPoints()
-
-	
-	CharacterMicroButton:SetScale(scaleFactor*42/100)
-	SpellbookMicroButton:SetScale(scaleFactor*42/100)
-	TalentMicroButton:SetScale(scaleFactor*42/100)
-	QuestLogMicroButton:SetScale(scaleFactor*42/100)
-	MainMenuBarPerformanceBarFrame:SetScale(scaleFactor*33/100)
-	GuildMicroButton:SetScale(scaleFactor*42/100)
-	WorldMapMicroButton:SetScale(scaleFactor*42/100)
-	SocialsMicroButton:SetScale(scaleFactor*42/100)
-	MainMenuMicroButton:SetScale(scaleFactor*42/100)
-	HelpMicroButton:SetScale(scaleFactor*42/100)
-	MainMenuBarBackpackButton:SetScale(scaleFactor*38/100)
-	KeyRingButton:SetScale(scaleFactor*37/100)
-	CharacterBag0Slot:SetScale(scaleFactor*38/100)
-	CharacterBag1Slot:SetScale(scaleFactor*38/100)
-	CharacterBag2Slot:SetScale(scaleFactor*38/100)
-	CharacterBag3Slot:SetScale(scaleFactor*38/100)
-
-
-	CharacterMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-92,-2)
-	SpellbookMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-67,-2)
-	TalentMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-42,-2)
-	QuestLogMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",-17,-2)
-	MainMenuBarPerformanceBarFrame:SetPoint("BOTTOM", UIParent, "BOTTOM",3,-9)
-	GuildMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",17,-2)
-	WorldMapMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",42,-2)
-	MainMenuMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",67,-2)
-	HelpMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",92,-2)
-	SocialsMicroButton:SetPoint("BOTTOM", UIParent, "BOTTOM",17,-2)
-
-	MainMenuBarBackpackButton:SetPoint("BOTTOM", UIParent, "BOTTOM",400,1)
-	KeyRingButton:SetPoint("BOTTOM", UIParent, "BOTTOM",217,0)
-	CharacterBag0Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",360,1)
-	CharacterBag1Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",320,1)
-	CharacterBag2Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",280,1)
-	CharacterBag3Slot:SetPoint("BOTTOM", UIParent, "BOTTOM",240,1)
-
-
-	CharacterMicroButton.ignoreFramePositionManager = true
-	SpellbookMicroButton.ignoreFramePositionManager = true
-	TalentMicroButton.ignoreFramePositionManager = true
-	QuestLogMicroButton.ignoreFramePositionManager = true
-	MainMenuMicroButton.ignoreFramePositionManager = true
-	MainMenuBarBackpackButton.ignoreFramePositionManager = true
-	CharacterBag0Slot.ignoreFramePositionManager = true
-	CharacterBag1Slot.ignoreFramePositionManager = true
-	CharacterBag2Slot.ignoreFramePositionManager = true
-	CharacterBag3Slot.ignoreFramePositionManager = true
-
-	
-	setFrameStratLevel(MainMenuBarPerformanceBarFrame,"MEDIUM",1)
-	
-	--MainMenuExpBar:ClearAllPoints()
-	--MainMenuExpBar:SetScale(scaleFactor*31)
-	--MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,229)--249
-
-	--ReputationWatchBar:ClearAllPoints()
-	--ReputationWatchBar:SetScale(scaleFactor*31)
-	--ReputationWatchBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,215)--235
-
-	ActionBarUpButton:ClearAllPoints()
-	ActionBarUpButton:SetScale(scaleFactor*46/100)
-	ActionBarUpButton:SetPoint("BOTTOM", UIParent, "BOTTOM",358,42)
-
-	ActionBarDownButton:ClearAllPoints()
-	ActionBarDownButton:SetScale(scaleFactor*46/100)
-	ActionBarDownButton:SetPoint("BOTTOM", UIParent, "BOTTOM",358,25)
-
-	--Needs a rethink
-	--TutorialFrameAlertButton1:ClearAllPoints()
-	--TutorialFrameAlertButton1:SetScale(scaleFactor*66/100)
-	--TutorialFrameAlertButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",0,250)
-	
-	--Stancebar
-	StanceButton1:ClearAllPoints()
-	StanceButton1:SetScale(scaleFactor*48/100)
-	StanceButton1:SetPoint("BOTTOM", UIParent, "BOTTOM",-318,1)
-
-	StanceButton2:ClearAllPoints()
-	StanceButton2:SetScale(scaleFactor*48/100)
-	StanceButton2:SetPoint("BOTTOM", UIParent, "BOTTOM",-286,1) --62
-
-	StanceButton3:ClearAllPoints()
-	StanceButton3:SetScale(scaleFactor*48/100)
-	StanceButton3:SetPoint("BOTTOM", UIParent, "BOTTOM",-256,1)
-
-	StanceButton4:ClearAllPoints()
-	StanceButton4:SetScale(scaleFactor*48/100)
-	StanceButton4:SetPoint("BOTTOM", UIParent, "BOTTOM",-226,1)
-
-	StanceButton5:ClearAllPoints()
-	StanceButton5:SetScale(scaleFactor*48/100)
-	StanceButton5:SetPoint("BOTTOM", UIParent, "BOTTOM",-196,1)
-
-	StanceButton6:ClearAllPoints()
-	StanceButton6:SetScale(scaleFactor*48/100)
-	StanceButton6:SetPoint("BOTTOM", UIParent, "BOTTOM",-166,1)		
-	
-	--StatusTrackingBarManager:Hide() -- Need to move that fucking bar
-	--StatusTrackingBarManager:ClearAllPoints()
-	--StatusTrackingBarManager:SetScale(scaleFactor*31/100)
-	--StatusTrackingBarManager:SetPoint("BOTTOM", UIParent, "BOTTOM",100,300)--249
-	
-	MainMenuExpBar:ClearAllPoints()
-	MainMenuExpBar:SetScale(scaleFactor*31/100)
-	MainMenuExpBar:SetPoint("BOTTOM", UIParent, "BOTTOM",-3,228)--242
-	
-end
-
-local function setupOrbs()
-	--BDOMod_RedOrb:SetVertexColor(0.85,0.2,0.2)
-	--BDOMod_RedOrb:SetAlpha(0.95)
-	BDOMod_RedOrb:SetVertexColor(0.7,0.0,0.0)
-	BDOMod_RedOrb:SetTexCoord(0, 1, 0, 1)
-	
-	BDOMod_HealthText:SetFont("Fonts\\FRIZQT__.TTF", 12)
-	BDOMod_HealthPercentage:SetFont("Fonts\\FRIZQT__.TTF", 25)
-	BDOMod_HealthText:SetText(UnitHealth("player").." / ".. UnitHealthMax("player"))
-	BDOMod_HealthPercentage:SetText(100)
-
-	BDOMod_ManaText:SetFont("Fonts\\FRIZQT__.TTF", 12)
-	BDOMod_ManaPercentage:SetFont("Fonts\\FRIZQT__.TTF", 25)
-	BDOMod_ManaText:SetText(UnitPower("player").." / ".. UnitPowerMax("player"))
-	BDOMod_ManaText:SetText(100)
-	
-	--setup healthorb mouseover/click/rightclick player events
-	local BDOMod_HealthOrbButton = CreateFrame("Button", nil, BDOMod_HealthOrb, "SecureUnitButtonTemplate")
-	BDOMod_HealthOrbButton:SetPoint("BOTTOM", BDOMod_HealthOrb, "BOTTOM", 0, 0)
-	BDOMod_HealthOrbButton:SetWidth(185)
-	BDOMod_HealthOrbButton:SetHeight(185)	
-	BDOMod_HealthOrbButton:RegisterForClicks("AnyUp")
-	BDOMod_HealthOrbButton:SetAttribute("unit", "player")
-	BDOMod_HealthOrbButton:SetAttribute("*type1","target")
-	BDOMod_HealthOrbButton:SetAttribute("*type2","togglemenu")
-	BDOMod_HealthOrbButton.PlayerFrameTooltip = CreateFrame("GameTooltip","PlayerTooltip",nil,"GameToolTipTemplate")
-	BDOMod_HealthOrbButton:SetScript("OnEnter", function()
-		GameTooltip_SetDefaultAnchor(GameTooltip,UIParent)
-		GameTooltip:SetUnit("player")
-		GameTooltip:Show()
-	end)
-	BDOMod_HealthOrbButton:SetScript("OnLeave",function()
-		GameTooltip:Hide()
-		--PlayerFrameDropDown:Hide()
-	end)
-end
-
-local function updatePowerType()
-	local powerType = UnitPowerType("player")
-	if (powerType == 0) then -- Mana
-		BDOMod_BlueOrb:SetVertexColor(0.2,0.2,1.0)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1) 
-		return
-	end
-	if (powerType == 1) then -- Rage
-		BDOMod_BlueOrb:SetVertexColor(1.0,0.15,0.15)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
-		return
-	end
-	if (powerType == 2) then -- Focus
-		BDOMod_BlueOrb:SetVertexColor(1.0,0.4,0.03)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
-		return
-	end
-	if (powerType == 3) then -- Energy
-		BDOMod_BlueOrb:SetVertexColor(1.0,1.0,0.0)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
-		return
-	end
-	if (powerType == 6) then -- Runic_Power
-		BDOMod_BlueOrb:SetVertexColor(0.2,0.75,1.0)
-		--BDOMod_BlueOrb:SetAlpha(0.95)
-		BDOMod_BlueOrb:SetTexCoord(0, 1, 0, 1)
-		return
-	end
-end
-
-local function hookingScripts()
-	ReputationWatchBar:HookScript("OnEvent", function(self)
-		handleExpReputationBars()
-	end)
-	VerticalMultiBarsContainer:HookScript("OnEvent", function(self)
-		handleMultiBars()
-	end)
-end
-
 function BDOMod_OnEvent(event)
-	if (event=="PLAYER_ENTERING_WORLD") then 
-		setupOrbs()
-		createArtwork()
-		reconfigUI()
-		hookingScripts()
-		handleExpReputationBars()
-		handleMultiBars()
-		handleVehicleLeaveButton()
-		updatePowerType()
-		updateHealthOrb()
-		updateManaOrb()
-		--makeFrameMovable(QuestWatchFrame)
-		return
-	end 
-	if (event=="UNIT_DISPLAYPOWER") then 
-		updatePowerType()
-		updateHealthOrb()
-		updateManaOrb()
+	if event == "PLAYER_ENTERING_WORLD" then
+		safeCall("setupOrbs", setupOrbs)
+		safeCall("createArtwork", createArtwork)
+		safeCall("reconfigUI", reconfigUI)
+		safeCall("hookingScripts", hookingScripts)
+		safeCall("handleExpReputationBars", handleExpReputationBars)
+		safeCall("handleMultiBars", handleMultiBars)
+		safeCall("handleVehicleLeaveButton", handleVehicleLeaveButton)
+		safeCall("updatePowerType", updatePowerType)
+		safeCall("updateHealthOrb", updateHealthOrb)
+		safeCall("updateManaOrb", updateManaOrb)
 		return
 	end
-	if (event=="UNIT_HEALTH") then 
-		updateHealthOrb()
+	if event == "UNIT_DISPLAYPOWER" then
+		safeCall("updatePowerType", updatePowerType)
+		safeCall("updateHealthOrb", updateHealthOrb)
+		safeCall("updateManaOrb", updateManaOrb)
 		return
 	end
-	if (event=="UNIT_POWER_UPDATE") then    
-		updateManaOrb()
+	if event == "UNIT_HEALTH" then
+		safeCall("updateHealthOrb", updateHealthOrb)
 		return
 	end
-	if (event=="SPELL_UPDATE_USABLE" or event=="ACTIONBAR_PAGE_CHANGED") then
+	if event == "UNIT_POWER_UPDATE" then
+		safeCall("updateManaOrb", updateManaOrb)
+		return
+	end
+	if event == "SPELL_UPDATE_USABLE" or event == "ACTIONBAR_PAGE_CHANGED" then
 		if not UnitAffectingCombat("player") then
-			handleMultiBars()
-			handleVehicleLeaveButton()
+			safeCall("handleMultiBars", handleMultiBars)
+			safeCall("handleVehicleLeaveButton", handleVehicleLeaveButton)
 		end
 		return
 	end

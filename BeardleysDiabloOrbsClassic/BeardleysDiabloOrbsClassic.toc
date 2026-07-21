@@ -1,10 +1,10 @@
-## Interface: 11200
+## Interface: 100105
 ## Title: BeardleysDiabloOrbsClassic
 ## Version: 0.1
 ## Notes: Beardley's Diablo Orbs for Classic WoW (retail)
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
-## SavedVariablesPerCharacter: BDClassic_SV
+## SavedVariablesPerCharacter: BDOModDB
 BeardleysDiabloOrbsClassic.xml
 BeardleysDiabloOrbsClassic.lua
 
